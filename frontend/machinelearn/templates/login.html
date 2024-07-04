@@ -8,11 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>welcome to machine learn</title>
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
 </head>
 
 <body>
-    <form method="post" action="/login/index">
+    <form method="post" action="/login/">
+        {% csrf_token %}
         <div class="box">
             <h2>Login</h2>
             <div class="input-box">
@@ -29,6 +31,7 @@
                     <button type="submit" value="登录">登录</button>
                     <button type="submit" value="注册">注册</button>
                 </div>
+
             </div>
         </div>
     </form>
