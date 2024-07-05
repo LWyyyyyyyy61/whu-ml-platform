@@ -123,8 +123,8 @@ def load_model(filepath, input_size, hidden_size, num_classes):
     return model
 
 # 使用示例
-file_path = '/home/asus/iris.csv'
-target_column = 'Species'
+file_path = '/home/asus/Thyroid_Diff.csv'
+target_column = 'Recurred'
 X_train, X_test, y_train, y_test = preprocess_data(file_path, target_column)
 
 input_size = X_train.shape[1]

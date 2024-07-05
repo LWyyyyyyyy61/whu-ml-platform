@@ -73,7 +73,7 @@ def plot_decision_tree(model, X_test, y_test, feature_name, iteration):
     plt.savefig(f"decision_tree_plot_{iteration}.png")
     plt.close()
 
-    # 显示混淆矩阵
+    # 显示混淆矩阵并添加数字
     plt.figure(figsize=(8, 6))
     plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
     plt.title(f'Confusion Matrix for iteration {iteration}')
@@ -81,6 +81,14 @@ def plot_decision_tree(model, X_test, y_test, feature_name, iteration):
     tick_marks = np.arange(len(np.unique(y_test)))
     plt.xticks(tick_marks, np.unique(y_test), rotation=45)
     plt.yticks(tick_marks, np.unique(y_test))
+
+    # 添加数字
+    thresh = cm.max() / 2.
+    for i, j in np.ndindex(cm.shape):
+        plt.text(j, i, format(cm[i, j], 'd'),
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
+
     plt.xlabel('Predicted Label')
     plt.ylabel('True Label')
     plt.tight_layout()
@@ -104,8 +112,8 @@ def load_model(filepath):
     return model
 
 # 使用示例
-file_path = '/home/asus/index.csv'
-target_column = 'coffee_name'
+file_path = '/home/asus/Thyroid_Diff.csv'
+target_column = 'Recurred'
 X_train, X_test, y_train, y_test = preprocess_data(file_path, target_column)
 
 for j in range(global_val):

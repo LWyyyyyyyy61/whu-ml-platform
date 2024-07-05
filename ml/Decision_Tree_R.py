@@ -7,15 +7,14 @@ from sklearn.metrics import mean_squared_error, r2_score
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from sklearn.decomposition import PCA
 
-# 全局变量
-global_val = 2
 
 def process_and_train_model(file_path, target_column):
     # 读取 CSV 文件
     df = pd.read_csv(file_path)
 
-    # 删除不必要的列（如果 rownames 列无用，可以删除）
+    # 删除不必要的列（如果 'rownames' 列无用，可以删除）
     if 'rownames' in df.columns:
         df.drop('rownames', axis=1, inplace=True)
 
@@ -32,10 +31,17 @@ def process_and_train_model(file_path, target_column):
     numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns
     df[numeric_columns] = scaler.fit_transform(df[numeric_columns])
 
-    # 特征和目标变量分离
-    X = df.drop(target_column, axis=1).values
+    # 使用PCA将特征降维到一维
+    pca = PCA(n_components=1)
+    X = pca.fit_transform(df.drop(target_column, axis=1))
+
+    # 取得降维后的特征数组
+    X = X.flatten()
+
     y = df[target_column].values
-    return X, y
+
+    # 返回 X, y,目标名
+    return X, y, target_column
 
 class SimpleLinearModel(nn.Module):
     def __init__(self, input_dim):
@@ -93,24 +99,24 @@ def train_model(X, y, train_ratio=0.8, num_epochs=1000, lr=0.01):
     return model, X_test, y_test
 
 # 使用示例
-X, y = process_and_train_model('/home/asus/bike-day.csv', 'cnt')
+X, y,target = process_and_train_model('/home/asus/bike-day.csv', 'cnt')
 
-for j in range(global_val):
-    feature_array = X[:, j].reshape(-1, 1)
-    model, X_test, y_test = train_model(feature_array, y, 0.8)
 
-    # 保存模型
-    torch.save(model.state_dict(), f'linear_model_{j}.pth')
+feature_array = X.reshape(-1, 1)
+model, X_test, y_test = train_model(feature_array, y, 0.8)
 
-    # 加载模型
-    loaded_model = SimpleLinearModel(feature_array.shape[1])
-    loaded_model.load_state_dict(torch.load(f'linear_model_{j}.pth'))
-    loaded_model.eval()
+# 保存模型
+torch.save(model.state_dict(), f'Dec_linear_model_{0}.pth')
 
-    # 测试加载的模型
-    with torch.no_grad():
-        test_predictions = loaded_model(torch.tensor(X_test, dtype=torch.float32)).numpy()
-        print(f'Test Predictions for model {j}:', test_predictions)
+# 加载模型
+loaded_model = SimpleLinearModel(feature_array.shape[1])
+loaded_model.load_state_dict(torch.load(f'Dec_linear_model_{0}.pth'))
+loaded_model.eval()
 
-    # 绘制预测结果
-    plot_predictions(loaded_model, torch.tensor(feature_array, dtype=torch.float32), y, feature_name=f"Feature {j}", iteration=j)
+# 测试加载的模型
+with torch.no_grad():
+    test_predictions = loaded_model(torch.tensor(X_test, dtype=torch.float32)).numpy()
+    print(f'Test Predictions for Dec_model {0}:', test_predictions)
+
+# 绘制预测结果
+plot_predictions(loaded_model, torch.tensor(feature_array, dtype=torch.float32), y, feature_name=f"Feature {0}", iteration=0)
