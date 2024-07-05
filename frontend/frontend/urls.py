@@ -15,14 +15,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from machinelearn import views
 from django.conf.urls.static import static
+from django.conf import settings
+
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('', include('machinelearn.urls')),
     path("register/",views.register,name='register'),
     path("login/",views.login,name='login'),
-    path("home/",views.home)
-]
+    path("home/",views.home),
+    path('upload/', views.upload_file, name='upload_file'),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
