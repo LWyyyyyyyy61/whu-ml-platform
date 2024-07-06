@@ -7,6 +7,9 @@ from django.core.files.storage import FileSystemStorage
 from .forms import UploadFileForm
 from .Linear_Regression import training
 from django.core.files.storage import default_storage
+
+import numpy as np
+
 # Create your views here.
 
 def login(request):
@@ -45,7 +48,8 @@ def upload_file(request):
             file_path = default_storage.save(uploaded_file.name, uploaded_file)
 
             # Call the training function
-          
+            training(file_path, target_column)
+
             
             # Construct model URL based on default_storage's URL method
             model_url = default_storage.url(f'linear_model.pth')
