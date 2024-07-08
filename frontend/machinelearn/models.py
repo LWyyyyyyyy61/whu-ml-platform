@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinLengthValidator, MaxLengthValidator, MinValueValidator, MaxValueValidator
 # Create your models here.
+<<<<<<< HEAD
 class User(models.Model):
     username=models.CharField(max_length=32)
     password=models.CharField(max_length=64)
@@ -17,3 +18,7 @@ class User(models.Model):
     #     ]
     # )
     
+=======
+
+
+>>>>>>> 6b1bd67c2db6af2b9412decbe0059188ce735d58
