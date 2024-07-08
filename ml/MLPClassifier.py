@@ -9,6 +9,8 @@ import torch.nn as nn
 import torch.optim as optim
 import seaborn as sns
 
+# 全局变量
+global_val = 2
 
 def preprocess_data(file_path, target_column):
     # 读取 CSV 文件

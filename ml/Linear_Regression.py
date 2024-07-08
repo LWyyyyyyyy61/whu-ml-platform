@@ -112,20 +112,21 @@ def custom_linear_regression(X, y, train_ratio=0.8):
 
     return model, split_idx
 
-# 使用示例
-X, y ,target= process_and_train_model('/home/asus/caesarian.csv', 'Age')
+def training(file_path, target_column):
+    # 使用示例
+    X, y ,target= process_and_train_model('/home/asus/caesarian.csv', 'Age')
 
-model, split_idx = custom_linear_regression(X, y, 0.8)
+    model, split_idx = custom_linear_regression(X, y, 0.8)
 
-# 保存模型
-torch.save(model.state_dict(), f'linear_model_{0}.pth')
+    # 保存模型
+    torch.save(model.state_dict(), f'linear_model_{0}.pth')
 
-# 加载模型
-loaded_model = SimpleLinearModel()
-loaded_model.load_state_dict(torch.load(f'linear_model_{0}.pth'))
-loaded_model.eval()
+    # 加载模型
+    loaded_model = SimpleLinearModel()
+    loaded_model.load_state_dict(torch.load(f'linear_model_{0}.pth'))
+    loaded_model.eval()
 
-# 测试加载的模型
-with torch.no_grad():
+    # 测试加载的模型
+    with torch.no_grad():
         test_predictions = loaded_model(torch.tensor(X[split_idx:], dtype=torch.float32).view(-1, 1)).numpy()
         print(f'Test Predictions for model {0}:', test_predictions)

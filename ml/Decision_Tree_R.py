@@ -8,11 +8,14 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from sklearn.decomposition import PCA
-
+from django.core.files.storage import default_storage
 
 def process_and_train_model(file_path, target_column):
+    # 获取文件的本地路径
+    local_file_path = default_storage.path(file_path)
+    
     # 读取 CSV 文件
-    df = pd.read_csv(file_path)
+    df = pd.read_csv(local_file_path)
 
     # 删除不必要的列（如果 'rownames' 列无用，可以删除）
     if 'rownames' in df.columns:
@@ -72,7 +75,7 @@ def plot_predictions(model, X, y, feature_name, iteration):
     plt.ylabel('Target')
     plt.legend()
     plt.tight_layout()
-    plt.savefig(f"linear_model_plot_{iteration}.png")
+    plt.savefig(f"media/linear_model_plot_{iteration}.png")
     plt.close()
 
 def train_model(X, y, train_ratio=0.8, num_epochs=1000, lr=0.01):
@@ -98,25 +101,28 @@ def train_model(X, y, train_ratio=0.8, num_epochs=1000, lr=0.01):
 
     return model, X_test, y_test
 
-# 使用示例
-X, y,target = process_and_train_model('/home/asus/bike-day.csv', 'cnt')
+def training(file_path, target_column):
+    # 使用示例
+    X, y, target = process_and_train_model(file_path, target_column)
 
+    feature_array = X.reshape(-1, 1)
+    model, X_test, y_test = train_model(feature_array, y, 0.8)
 
-feature_array = X.reshape(-1, 1)
-model, X_test, y_test = train_model(feature_array, y, 0.8)
+    # 保存模型
+    torch.save(model.state_dict(), f'media/linear_model_{0}.pth')
 
-# 保存模型
-torch.save(model.state_dict(), f'Dec_linear_model_{0}.pth')
+    # 加载模型
+    loaded_model = SimpleLinearModel(feature_array.shape[1])
+    loaded_model.load_state_dict(torch.load(f'media/linear_model_{0}.pth'))
+    loaded_model.eval()
 
-# 加载模型
-loaded_model = SimpleLinearModel(feature_array.shape[1])
-loaded_model.load_state_dict(torch.load(f'Dec_linear_model_{0}.pth'))
-loaded_model.eval()
+    # 测试加载的模型
+    with torch.no_grad():
+        test_predictions = loaded_model(torch.tensor(X_test, dtype=torch.float32)).numpy()
+        print(f'Test Predictions for model {0}:', test_predictions)
 
-# 测试加载的模型
-with torch.no_grad():
-    test_predictions = loaded_model(torch.tensor(X_test, dtype=torch.float32)).numpy()
-    print(f'Test Predictions for Dec_model {0}:', test_predictions)
+    # 绘制预测结果
+    plot_predictions(loaded_model, torch.tensor(feature_array, dtype=torch.float32), y, feature_name=f"Feature {0}", iteration=0)
 
-# 绘制预测结果
-plot_predictions(loaded_model, torch.tensor(feature_array, dtype=torch.float32), y, feature_name=f"Feature {0}", iteration=0)
+# 调用训练函数
+training('/home/asus/datasets/bike-day.csv', 'cnt')
