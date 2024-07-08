@@ -15,9 +15,10 @@ def read_data(file_path, column_names=None):
     else:
         raise ValueError("Unsupported file format")
 
-def preprocess_data(file_path, target_column, column_names=None):
-    df = read_data(file_path, column_names)
+def preprocess_data_unsupervised(file_path):
+    df =read_data(file_path)  # 转换为DataFrame
 
+    # 删除指定列名（如果有的话）
     if 'rownames' in df.columns:
         df.drop('rownames', axis=1, inplace=True)
 
@@ -28,26 +29,28 @@ def preprocess_data(file_path, target_column, column_names=None):
         df[column] = le.fit_transform(df[column])
         label_encoders[column] = le
 
+    # 填充缺失值
     for column in df.columns:
         if df[column].dtype == 'object':
             df[column].fillna(df[column].mode()[0], inplace=True)
         else:
             df[column].fillna(df[column].mean(), inplace=True)
 
+    # 检查是否还有缺失值
     if df.isnull().sum().sum() > 0:
         df = df.dropna()
 
     if df.empty:
         raise ValueError("Dataframe is empty after handling NaN values.")
 
+    # 标准化数值型特征
     scaler = StandardScaler()
     numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns
     df[numeric_columns] = scaler.fit_transform(df[numeric_columns])
 
-    X = df.drop(target_column, axis=1).values
-    y = df[target_column].values
-    return X, y, label_encoders
+    X = df.values  # 返回预处理后的特征矩阵
 
+    return X
 def plot_clusters(X, labels, centroids, title='K-Means Clustering'):
     plt.figure(figsize=(10, 6))
     plt.scatter(X[:, 0], X[:, 1], c=labels, s=50, cmap='viridis')
@@ -56,7 +59,7 @@ def plot_clusters(X, labels, centroids, title='K-Means Clustering'):
     plt.savefig(f"{title}.png")
     plt.close()
 
-def train_and_evaluate_model(X, y, num_clusters, model_name):
+def train_and_evaluate_model(X, num_clusters, model_name):
     model = KMeans(n_clusters=num_clusters, random_state=42)
     labels = model.fit_predict(X)
 
@@ -67,15 +70,13 @@ def train_and_evaluate_model(X, y, num_clusters, model_name):
     print(f"{model_name} Silhouette Score: {silhouette_avg:.2f}")
 
 def main():
-    file_path = '/home/asus/iris.csv'  # 修改为你的数据文件路径
-    target_column = 'Species'  # 修改为你的目标列名称
-    column_names = None  # 如果是 .data 文件，请提供列名称列表
+    file_path = 'F:/Google/data2.csv'  # 修改为你的数据文件路径
     model_path = 'kmeans_model.joblib'
-    num_clusters = 3  # 修改为所需的聚类数量
+    num_clusters = 2  # 修改为所需的聚类数量
 
-    X, y, label_encoders = preprocess_data(file_path, target_column, column_names)
+    X = preprocess_data_unsupervised(file_path)
 
-    train_and_evaluate_model(X, y, num_clusters, 'K-Means')
+    train_and_evaluate_model(X, num_clusters, 'K-Means')
 
     model = KMeans(n_clusters=num_clusters, random_state=42)
     model.fit(X)
