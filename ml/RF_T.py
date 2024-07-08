@@ -8,8 +8,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 import joblib
 
-# 全局变量
-global_val = 2
+
 
 def preprocess_data(file_path, target_column):
     # 读取 TSV 文件
@@ -91,10 +90,10 @@ model_path = 'random_forest_model.joblib'
 
 X_train, X_test, y_train, y_test, label_encoders, scaler = preprocess_data(file_path, target_column)
 
-for j in range(global_val):
-    # 使用所有特征进行训练
-    model = train_random_forest_classifier(X_train, y_train)
-    save_model(model, model_path)
-    loaded_model = load_model(model_path)
 
-    test_model(loaded_model, X_test, y_test, label_encoders, target_column)
+
+model = train_random_forest_classifier(X_train, y_train)
+save_model(model, model_path)
+loaded_model = load_model(model_path)
+
+test_model(loaded_model, X_test, y_test, label_encoders, target_column)
