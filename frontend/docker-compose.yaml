@@ -1,8 +1,7 @@
 services:
   app:
-    restart: always
-    build: .
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    image: frontend:v1
+    command: bash -c "sleep 20 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/code
     ports:
@@ -15,8 +14,6 @@ services:
       - ./mysql:/var/lib/mysql
     ports:
       - "3307:3306"
-    restart: always
     environment:
       - MYSQL_DATABASE=mysql_db
       - MYSQL_ROOT_PASSWORD=root123
-
