@@ -6,8 +6,9 @@ from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
 from .forms import UploadFileForm
 from .Linear_Regression import training
-from django.core.files.storage import default_storage
 
+from django.core.files.storage import default_storage
+from django.contrib.auth.decorators import login_required
 import numpy as np
 
 # Create your views here.
@@ -34,44 +35,79 @@ def register(request):
         user = User.objects.create(username=username,password=password,email=email,phonenumber="1234567890")
         return redirect('/login/')
     return render(request, "register.html")
+
+
 def home(request):
     if request.method=='GET':
         return render(request,"home.html")
     else:
-        target=request.POST.get('target')
-        uploadfile=request.FILES['exampleInputFile']
-        classop=request.POST.get('qescls')
-        if classop=='cls':
-            file_path = default_storage.save(uploadfile.name, uploadfile)
-            training(file_path, target)
-            image_path = default_storage.url(f'regression_plot_{1000}.png')
-            model_url = default_storage.url(f'linear_model_0.pth')
-            return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
-        elif classop=='bak':
-            file_path = default_storage.save(uploadfile.name, uploadfile)
-            training(file_path, target)
-            image_path = default_storage.url(f'regression_plot_{1000}.png')
-            model_url = default_storage.url(f'linear_model_0.pth')
-            return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+        
+        frq=request.POST.get('learnfqt')
+        ct=request.POST.get('cont')
+        if (frq and ct):
+                target=request.POST.get('target1')
+                uploadfile=request.FILES['exampleInputFile1']
+                classop=request.POST.get('qescls1')
+                if classop=='cls':
+                    file_path = default_storage.save(uploadfile.name, uploadfile)
+                    training(file_path, target)
+                    image_path = default_storage.url(f'regression_plot_{1000}.png')
+                    model_url = default_storage.url(f'linear_model_0.pth')
+                    return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+                elif classop=='bak':
+                    file_path = default_storage.save(uploadfile.name, uploadfile)
+                    training(file_path, target,frq,ct)
+                    image_path = default_storage.url(f'regression_plot_{ct}.png')
+                    model_url = default_storage.url(f'linear_model_0.pth')
+                    return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+        else:
+            target=request.POST.get('target')
+            uploadfile=request.FILES['exampleInputFile']
+            classop=request.POST.get('qescls')    
+            if classop=='cls':
+                file_path = default_storage.save(uploadfile.name, uploadfile)
+                training(file_path, target)
+                image_path = default_storage.url(f'regression_plot_{1000}.png')
+                model_url = default_storage.url(f'linear_model_0.pth')
+                return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+            elif classop=='bak':
+                file_path = default_storage.save(uploadfile.name, uploadfile)
+                training(file_path, target)
+                image_path = default_storage.url(f'regression_plot_{1000}.png')
+                model_url = default_storage.url(f'linear_model_0.pth')
+                return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
 
 def upload_file(request):
-     if request.method == 'POST':
+    
+    if request.method == 'POST':
+        
         form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            uploaded_file = request.FILES['file']
-            target_column = form.cleaned_data['target_column']
-            
-            # Save the file using default_storage only once
-            file_path = default_storage.save(uploaded_file.name, uploaded_file)
-
-            # Call the training function
-            training(file_path, target_column)
-
-            
-            # Construct model URL based on default_storage's URL method
-            model_url = default_storage.url(f'linear_model.pth')
-
-            return render(request, 'result.html', { 'model_url': model_url})
-     else:
+        classoption=form.cleaned_data['classoption']
+        if classoption == 'cls':
+            if form.is_valid():
+                uploaded_file = request.FILES['file']
+                target_column = form.cleaned_data['target_column']
+                
+                file_path = default_storage.save(uploaded_file.name, uploaded_file)
+                training(file_path, target_column)
+                image_path = default_storage.url(f'regression_plot_{1000}.png')
+                model_url = default_storage.url(f'linear_model_0.pth')
+                return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+        elif classoption == 'back':
+            if form.is_valid():
+                uploaded_file = request.FILES['file']
+                target_column = form.cleaned_data['target_column']
+                file_path = default_storage.save(uploaded_file.name, uploaded_file)
+                training(file_path, target_column)
+                image_path = default_storage.url(f'regression_plot_{1000}.png')
+                model_url = default_storage.url(f'linear_model_0.pth')
+                return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+        else:
+            form = UploadFileForm()
+            return render(request, 'upload.html', {'form': form})
+    else:
         form = UploadFileForm()
-     return render(request, 'upload.html', {'form': form})
+        return render(request, 'upload.html', {'form': form})
+    
+def userinf(request):
+    return render(request,'user.html')
