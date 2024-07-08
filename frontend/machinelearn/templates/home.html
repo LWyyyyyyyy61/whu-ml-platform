@@ -20,21 +20,22 @@
         <div class="panel panel-default col-md-4 col-md-offset-1 ">
             <div class="panel-heading">Panel heading without title</div>
             <div class="panel-body">
-                <form action="/submit-form" method="POST">
-                    <div class="form-group">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class=" form-group">
                         <label for="exampleInputEmail1">目标特征值名称</label>
-                        <input type="text" class="form-control" id="" placeholder="目标特征值名称">
+                        <input type="text" class="form-control" id="" placeholder="目标特征值名称" name="target">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">选择问题类型</label>
-                        <select class="form-control" name="问题类型" id="">
-                            <option value="分类">分类</option>
-                            <option value="回归">回归</option>
+                        <select class="form-control" name="qescls" id="">
+                            <option value="cls">分类</option>
+                            <option value="bak">回归</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputFile">File input</label>
-                        <input type="file" id="exampleInputFile">
+                        <input type="file" id="exampleInputFile" name="exampleInputFile">
                         <p class="help-block">Example block-level help text here.</p>
                     </div>
                     <div class="checkbox">

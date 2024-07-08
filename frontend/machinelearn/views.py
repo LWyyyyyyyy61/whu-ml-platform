@@ -35,7 +35,24 @@ def register(request):
         return redirect('/login/')
     return render(request, "register.html")
 def home(request):
-    return render(request,"home.html")
+    if request.method=='GET':
+        return render(request,"home.html")
+    else:
+        target=request.POST.get('target')
+        uploadfile=request.FILES['exampleInputFile']
+        classop=request.POST.get('qescls')
+        if classop=='cls':
+            file_path = default_storage.save(uploadfile.name, uploadfile)
+            training(file_path, target)
+            image_path = default_storage.url(f'regression_plot_{1000}.png')
+            model_url = default_storage.url(f'linear_model_0.pth')
+            return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+        elif classop=='bak':
+            file_path = default_storage.save(uploadfile.name, uploadfile)
+            training(file_path, target)
+            image_path = default_storage.url(f'regression_plot_{1000}.png')
+            model_url = default_storage.url(f'linear_model_0.pth')
+            return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
 
 def upload_file(request):
      if request.method == 'POST':
