@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
+from machinelearn.models import User
 from django.contrib.auth import login, authenticate
 import os
 from django.shortcuts import render
@@ -13,26 +13,26 @@ import numpy as np
 # Create your views here.
 
 def login(request):
+    if request.method == 'GET':
+        return render(request, "login.html")
+    else:
+        username = request.POST.get('user')
+        password = request.POST.get('pwd')
+    if username and password and User.objects.filter(username=username, password=password).exists():
+        return redirect('/home/')
+    else:
+        return redirect('/login/')
+def register(request):
     if request.method == 'POST':
         username = request.POST.get('user')
         password = request.POST.get('pwd')
-        # 在此处处理用户名和密码的验证逻辑
-        return redirect('/home/')
-    return render(request, "login.html")
-
-def register(request):
-    if request.method == 'POST':
-        username = request.POST['user']
-        password = request.POST['pwd']
-        mail=request.POST['e-mail']
-        phonenumber=request.POST['phone-number']
+        email=request.POST.get('e-mail')
+        # phonenumber=request.POST.get('phone-number')
         if User.objects.filter(username=username).exists():
             # 用户名已存在,提示用户尝试其他用户名
             return render(request, 'register.html', {'error': 'Username already exists. Please try a different one.'})
-        user = User.objects.create_user(username=username, password=password,email=mail,first_name=phonenumber)
-        user.save()
-        login(request, user)
-        return redirect('/home/')
+        user = User.objects.create(username=username,password=password,email=email,phonenumber="1234567890")
+        return redirect('/login/')
     return render(request, "register.html")
 def home(request):
     return render(request,"home.html")
