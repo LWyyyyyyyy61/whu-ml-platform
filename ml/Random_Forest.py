@@ -8,8 +8,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 import joblib
 
-# 全局变量
-global_val = 2
 
 def preprocess_data(file_path, target_column):
     # 读取 CSV 文件
@@ -78,15 +76,15 @@ def test_model(model, X_test, y_test, label_encoders, target_column):
 
     # 绘制混淆矩阵热图
     target_labels = list(label_encoders[target_column].classes_)
-    plot_confusion_matrix(cm, classes=target_labels, title='Confusion Matrix')
+    plot_confusion_matrix(cm, classes=target_labels, title='RF_Confusion Matrix')
 
     print(f"Accuracy: {accuracy:.2f}")
-    print("Confusion Matrix:")
+    print("Random_Forest_Confusion Matrix:")
     print(cm)
 
 # 使用示例
-file_path = '/home/asus/Thyroid_Diff.csv'
-target_column = 'Recurred'
+file_path = 'F:/datasets/datasets/caesarian.csv'
+target_column = 'Caesarian'
 model_path = 'random_forest_model.joblib'
 
 X_train, X_test, y_train, y_test, label_encoders, scaler = preprocess_data(file_path, target_column)
