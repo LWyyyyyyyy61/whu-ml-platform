@@ -1,4 +1,4 @@
-{% load static %}
+% load static %}
 <!DOCTYPE html>
 <html>
 
@@ -10,32 +10,44 @@
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css' %}">
-</head>
-<title>结果</title>
+
+    <title>结果</title>
+    <style>
+        img {
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h1>上传结果</h1>
+
+    <div class="container-fluid " style="margin-top: 5%;">
+
+        <div class="panel panel-default col-md-4 col-md-offset-1 ">
+            <div class="panel-heading">
+                上传结果
+            </div>
+            <div class="panel-body">
+                <p>模型文件：<a href="{{ model_url }}">点击下载模型</a></p>
+
+            </div>
         </div>
-        <div class="panel-body">
-            <p>模型文件：<a href="{{ model_url }}">点击下载模型</a></p>
-            <img src="/media/regression_plot_{{ iteration }}.png" alt="Regression Plot">
+        <div class="col-md-2"></div>
+        <div class="panel panel-default col-md-4 ">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">图片</h3>
+                </div>
+                <div class="panel-body">
+                    <img src="{{image_path}}" alt="Regression Plot">
+                </div>
+            </div>
         </div>
+
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Panel title</h3>
-        </div>
-        <div class="panel-body">
-            Panel content
-        </div>
-    </div>
 
-
-    <script src="{% static 'js/jquery-3.7.1.js' %}"></script>
+    <script src=" {% static 'js/jquery-3.7.1.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
 </body>
