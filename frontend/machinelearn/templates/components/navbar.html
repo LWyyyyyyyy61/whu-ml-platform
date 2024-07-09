@@ -9,25 +9,23 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><i class="fa-solid fa-network-wired"></i>ml-platform</a>
+            <a class="navbar-brand" href="{% url 'home' %}"><i class="fa-solid fa-network-wired"></i>ml-platform</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">model <span class="sr-only">(current)</span></a></li>
-                <li><a href="#">exercise</a></li>
+                <!-- <li class="active"><a href="#">model <span class="sr-only">(current)</span></a></li> -->
+                <li><a href="#">Model introduction</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                        aria-expanded="false">more <span class="caret"></span></a>
+                        aria-expanded="false">model<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
+                        <li><a href="#">Regression</a></li>
+                        <li><a href="#">Classification</a></li>
+                        <li><a href="#">Clustering</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">One more separated link</a></li>
+                        <li><a href="#">coming soon</a></li>
                     </ul>
                 </li>
             </ul>
@@ -38,13 +36,13 @@
                 <button type="submit" class="btn btn-default"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">information</a></li>
+                <li><a href="{% url 'information' %}">information</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                         aria-expanded="false"> <i class="fa-solid fa-house"></i>account
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Users</a></li>
+                        <li><a href="{% url 'user' %}">Users</a></li>
                         <li><a href="#">history</a></li>
                         <li><a href="#">Something else here</a></li>
                         <li role="separator" class="divider"></li>

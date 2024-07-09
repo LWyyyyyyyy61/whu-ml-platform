@@ -7,10 +7,12 @@ import torch.nn as nn
 import torch.optim as optim
 from sklearn.decomposition import PCA
 from django.core.files.storage import default_storage
+
+
 def process_and_train_model(file_path, target_column):
-   # 获取文件的本地路径
+    # 获取文件的本地路径
     local_file_path = default_storage.path(file_path)
-    
+
     # 使用正确的路径读取 CSV 文件
     df = pd.read_csv(local_file_path)
 
@@ -52,6 +54,7 @@ class SimpleLinearModel(nn.Module):
     def forward(self, x):
         return self.linear(x)
 
+
 # 绘制回归线和统计信息的函数
 def plotLine(theta0, theta1, X, y, train_ratio, iteration):
     max_x = np.max(X) + 100
@@ -83,23 +86,26 @@ def plotLine(theta0, theta1, X, y, train_ratio, iteration):
     plt.xlim(min(X) - x_margin, max(X) + x_margin)  # 设置x轴范围
 
     plt.tight_layout()
-    plt.savefig(f"regression_plot_{iteration}.png")  # 保存图像
+    plt.savefig(f"media/regression_plot_{iteration}.png")  # 保存图像
     plt.close()
 
-def custom_linear_regression(X, y, train_ratio=0.8):
+
+def custom_linear_regression(X, y, train_ratio, learning_nums,learning_rate):
     # 将数据转换为 PyTorch 张量
     X = torch.tensor(X, dtype=torch.float32).view(-1, 1)
     y = torch.tensor(y, dtype=torch.float32).view(-1, 1)
-
-    split_idx = int(len(X) * train_ratio)
+    train_ratio_rate =float(train_ratio)
+    learning_num = int(learning_nums)
+    learning_rate = float(learning_rate)
+    split_idx = int(len(X) * train_ratio_rate)
     X_train, X_test = X[:split_idx], X[split_idx:]
     y_train, y_test = y[:split_idx], y[split_idx:]
 
     model = SimpleLinearModel()
     criterion = nn.MSELoss()
-    optimizer = optim.SGD(model.parameters(), lr=0.005)
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate)
 
-    for i in range(1000):
+    for i in range(learning_num):
         model.train()
         optimizer.zero_grad()
         outputs = model(X_train)
@@ -107,29 +113,35 @@ def custom_linear_regression(X, y, train_ratio=0.8):
         loss.backward()
         optimizer.step()
 
-        if (i + 1) % 100 == 0:
+        if (i + 1) % learning_num == 0:
             # 获取当前的模型参数
             theta0 = model.linear.bias.item()
             theta1 = model.linear.weight.item()
-            plotLine(theta0, theta1, X_train.numpy(), y_train.numpy(), (i + 1) / 1000, i + 1)
+            plotLine(theta0, theta1, X_train.numpy(), y_train.numpy(), (i + 1) / learning_num, i + 1)
 
     return model, split_idx
 
-def training(file_path, target_column):
-    # 使用示例
-    X, y ,target= process_and_train_model(file_path, target_column)
 
-    model, split_idx = custom_linear_regression(X, y, 0.8)
+def training(file_path, target_column, train_ratio, learning_nums,learning_rate):
+    # 使用示例
+    X, y, target = process_and_train_model(file_path, target_column)
+
+    model, split_idx = custom_linear_regression(X, y, train_ratio, learning_nums,learning_rate)
 
     # 保存模型
-    torch.save(model.state_dict(), f'linear_model_{0}.pth')
+    torch.save(model.state_dict(), f'media/linear_model_{0}.pth')
 
     # 加载模型
     loaded_model = SimpleLinearModel()
-    loaded_model.load_state_dict(torch.load(f'linear_model_{0}.pth'))
+    loaded_model.load_state_dict(torch.load(f'media/linear_model_{0}.pth'))
     loaded_model.eval()
 
     # 测试加载的模型
     with torch.no_grad():
         test_predictions = loaded_model(torch.tensor(X[split_idx:], dtype=torch.float32).view(-1, 1)).numpy()
         print(f'Test Predictions for model {0}:', test_predictions)
+
+
+
+# if __name__ == '__main__':
+#     training('F:/datasets/datasets/test.csv','education',0.8,10000,0.005)
