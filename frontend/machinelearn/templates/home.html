@@ -16,7 +16,7 @@
 
 <body>
     {% block content %}
-    <div class="container-fluid " style="margin-top: 5%;">
+    <div class="container-fluid " style="margin-top: 1%;">
 
         <div class="panel panel-default col-md-4 col-md-offset-1 ">
             <div class="panel-heading">默认训练模型</div>
@@ -68,16 +68,18 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputFile">File input</label>
-                        <input type="file" id="exampleInputFile" name="exampleInputFile1">
+                        <label for="exampleInputFile1">File input</label>
+                        <input type="file" id="exampleInputFile1" name="exampleInputFile1">
                         <p class="help-block">Example block-level help text here.</p>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">学习率</label>
-                        <input type="number" class="form-control" id="" placeholder="80%" name="learnfqt">
+                        <label for="exerfqt">训练率</label>
+                        <input type="number" class="form-control" id="" placeholder="80%" name="exerfqt">
 
-                        <label for="exampleInputEmail1">训练次数</label>
+                        <label for="cont">训练次数</label>
                         <input type="number" class="form-control" id="" placeholder="1000" name="cont">
+                        <label for="learnfqt">学习率</label>
+                        <input type="text" class="form-control" id="" placeholder="0.005" name="learnfqt">
                     </div>
 
                     <button type="submit" class="btn btn-default">Submit</button>
@@ -93,16 +95,7 @@
     <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
     <script>
-        function cli(self) {
-            $(self).css('background-color', "rgb(182, 212, 212)")
-            var hashde = $(self).next().hasClass("hde");
-            if (hashde) {
-                $(self).next().removeClass("hde");
-            }
-            else {
-                $(self).next().addClass("hde");
-            }
-        }
+
     </script>
 </body>
 

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from machinelearn.models import User
 from django.contrib.auth import login, authenticate
 import os
@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
 from .forms import UploadFileForm
 from .Linear_Regression import training
-
+from .Decision_Tree_R import train
 from django.core.files.storage import default_storage
 from django.contrib.auth.decorators import login_required
 import numpy as np
@@ -41,10 +41,11 @@ def home(request):
     if request.method=='GET':
         return render(request,"home.html")
     else:
-        
+        exeq=request.POST.get('exerfqt')
         frq=request.POST.get('learnfqt')
         ct=request.POST.get('cont')
-        if (frq and ct):
+
+        if (frq and ct and exeq):
                 target=request.POST.get('target1')
                 uploadfile=request.FILES['exampleInputFile1']
                 classop=request.POST.get('qescls1')
@@ -56,10 +57,12 @@ def home(request):
                     return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
                 elif classop=='bak':
                     file_path = default_storage.save(uploadfile.name, uploadfile)
-                    training(file_path, target,frq,ct)
+                    training(file_path, target,exeq,ct,frq)
                     image_path = default_storage.url(f'regression_plot_{ct}.png')
                     model_url = default_storage.url(f'linear_model_0.pth')
                     return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+        elif ((frq and ct and ~exeq)or(~frq and ct and exeq)or(frq and ~ct and exeq)or(~frq and ~ct and exeq)or(frq and ~ct and ~exeq)or(~frq and ct and ~exeq)):
+            return HttpResponse("提交失败请完整填写参数")
         else:
             target=request.POST.get('target')
             uploadfile=request.FILES['exampleInputFile']
@@ -111,3 +114,5 @@ def upload_file(request):
     
 def userinf(request):
     return render(request,'user.html')
+def information(request):
+    return render(request,'information.html')

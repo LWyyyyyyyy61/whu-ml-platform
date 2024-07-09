@@ -90,21 +90,20 @@ def plotLine(theta0, theta1, X, y, train_ratio, iteration):
     plt.close()
 
 
-def custom_linear_regression(X, y, train_ratio, learning_nums):
+def custom_linear_regression(X, y, train_ratio, learning_nums,learning_rate):
     # 将数据转换为 PyTorch 张量
     X = torch.tensor(X, dtype=torch.float32).view(-1, 1)
     y = torch.tensor(y, dtype=torch.float32).view(-1, 1)
-    train_ratio_num =float(train_ratio)
-    train_ratio_num /=100
+    train_ratio_rate =float(train_ratio)
     learning_num = int(learning_nums)
-
-    split_idx = int(len(X) * train_ratio_num)
+    learning_rate = float(learning_rate)
+    split_idx = int(len(X) * train_ratio_rate)
     X_train, X_test = X[:split_idx], X[split_idx:]
     y_train, y_test = y[:split_idx], y[split_idx:]
 
     model = SimpleLinearModel()
     criterion = nn.MSELoss()
-    optimizer = optim.SGD(model.parameters(), lr=0.005)
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate)
 
     for i in range(learning_num):
         model.train()
@@ -123,11 +122,11 @@ def custom_linear_regression(X, y, train_ratio, learning_nums):
     return model, split_idx
 
 
-def training(file_path, target_column, train_ratio, learning_nums):
+def training(file_path, target_column, train_ratio, learning_nums,learning_rate):
     # 使用示例
     X, y, target = process_and_train_model(file_path, target_column)
 
-    model, split_idx = custom_linear_regression(X, y, train_ratio, learning_nums)
+    model, split_idx = custom_linear_regression(X, y, train_ratio, learning_nums,learning_rate)
 
     # 保存模型
     torch.save(model.state_dict(), f'media/linear_model_{0}.pth')
@@ -142,3 +141,7 @@ def training(file_path, target_column, train_ratio, learning_nums):
         test_predictions = loaded_model(torch.tensor(X[split_idx:], dtype=torch.float32).view(-1, 1)).numpy()
         print(f'Test Predictions for model {0}:', test_predictions)
 
+
+
+# if __name__ == '__main__':
+#     training('F:/datasets/datasets/test.csv','education',0.8,10000,0.005)

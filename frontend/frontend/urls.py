@@ -27,8 +27,9 @@ urlpatterns = [
     path('', include('machinelearn.urls')),
     path("register/",views.register,name='register'),
     path("login/",views.login,name='login'),
-    path("home/",views.home),
+    path("home/",views.home,name='home'),
     path('upload/', views.upload_file, name='upload_file'),
-    path('user/',views.userinf,name='user')
+    path('user/',views.userinf,name='user'),
+    path('information/',views.information,name='information')
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
