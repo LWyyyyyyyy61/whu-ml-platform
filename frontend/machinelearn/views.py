@@ -116,3 +116,56 @@ def userinf(request):
     return render(request,'user.html')
 def information(request):
     return render(request,'information.html')
+def Regress(request):
+    return render(request,'Regression.html')
+def linearRegress(request):
+    if request.method=='GET':
+        return render(request,'Linear_Regression.html')
+    else:
+        exeq=request.POST.get('exerfqt')
+        ct=request.POST.get('cont')
+        frq=request.POST.get('learnfqt')
+        if (ct and exeq):
+                if (frq and ct and exeq):
+                 target=request.POST.get('regretar1')
+                 uploadfile=request.FILES['regresfile1']
+                 file_path = default_storage.save(uploadfile.name, uploadfile)
+                 training(file_path, target,exeq,ct,frq)
+                 image_path = default_storage.url(f'regression_plot_{ct}.png')
+                 model_url = default_storage.url(f'linear_model_{ct}.pth')
+                return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+        elif ((frq and ct and ~exeq)or(~frq and ct and exeq)or(frq and ~ct and exeq)or(~frq and ~ct and exeq)or(frq and ~ct and ~exeq)or(~frq and ct and ~exeq)):
+            return HttpResponse("提交失败请完整填写参数")
+        else:
+            target=request.POST.get('regretar')
+            uploadfile=request.FILES['regresfile']
+            file_path = default_storage.save(uploadfile.name, uploadfile)
+            training(file_path, target,0.8,1000,0.005)
+            image_path = default_storage.url(f'regression_plot_{ct}.png')
+            model_url = default_storage.url(f'linear_model_{ct}.pth')
+            return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+def DecisionTr(request):
+    if request.method=='GET':
+        return render(request,'Decision_Tree.html')
+    else:
+        exeq=request.POST.get('exerfqt')
+        ct=request.POST.get('cont')
+        if (ct and exeq):
+                target=request.POST.get('regretar1')
+                uploadfile=request.FILES['regresfile1']
+                file_path = default_storage.save(uploadfile.name, uploadfile)
+                train(file_path, target,exeq,ct)
+                image_path = default_storage.url(f'Decision_Regression_{ct}.png')
+                model_url = default_storage.url(f'Decision_Regression_{ct}.pth')
+                return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+        elif ((ct and ~exeq)or(~ct and exeq)or(~ct and exeq)or(~ct and ~exeq)or(ct and ~exeq)):
+            return HttpResponse("提交失败请完整填写参数")
+        
+        else:
+            target=request.POST.get('regretar')
+            uploadfile=request.FILES['regresfile']
+            file_path = default_storage.save(uploadfile.name, uploadfile)
+            train(file_path, target,0.8,1000)
+            image_path = default_storage.url(f'Decision_Regression_{ct}.png')
+            model_url = default_storage.url(f'Decision_Regression_{ct}.pkl')
+            return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
