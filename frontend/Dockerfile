@@ -1,12 +1,17 @@
 FROM python:3.10
 ENV PYTHONUNBUFFERED 1
 
+RUN echo \
+deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free\
+deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-updates main contrib non-free\
+deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib non-free\
+deb https://mirrors.tuna.tsinghua.edu.cn/debian-security buster/updates main contrib non-free
+
 
 
 RUN apt-get clean && apt-get update && \
-    apt-get -y install build-essential python3-dev default-libmysqlclient-dev && \
-    rm -rf /var/lib/apt/lists/*
-
+    apt-get -y install build-essential python3-dev default-libmysqlclient-dev
+    
 
 RUN mkdir /code
 WORKDIR /code
