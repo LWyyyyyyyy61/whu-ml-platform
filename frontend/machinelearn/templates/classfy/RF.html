@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>welcome to machine learn</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css' %}">
+
+</head>
+
+<body>
+    {% block content %}
+    <div class="container-fluid " style="margin-top: 1%;">
+
+        <div class="panel panel-default col-md-4 col-md-offset-1 ">
+            <div class="panel-heading">默认训练模型</div>
+            <div class="panel-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class=" form-group">
+                        <label for="regretar">目标值</label>
+                        <input type="text" class="form-control" id="" placeholder="目标值" name="regretar">
+                    </div>
+                    <div class="form-group">
+                        <label for="regresfile">File input</label>
+                        <input type="file" id="regresfile" name="regresfile">
+                        <p class="help-block">Example block-level help text here.</p>
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="panel panel-default col-md-4 ">
+            <div class="panel-heading">
+                自定义训练模型
+            </div>
+            <div class="panel-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class=" form-group">
+                        <label for="regretar1">目标值</label>
+                        <input type="text" class="form-control" id="" placeholder="目标值" name="regretar1">
+                    </div>
+                    <div class="form-group">
+                        <label for="regresfile1">File input</label>
+                        <input type="file" id="regresfile1" name="regresfile1">
+                        <p class="help-block">Example block-level help text here.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="exerfqt">训练率</label>
+                        <input type="text" class="form-control" id="" placeholder="0.8" name="exerfqt">
+                    </div>
+                    <div class="form-group">
+                        <label for="cont">随机种子</label>
+                        <input type="number" class="form-control" id="" placeholder="65536" name="cont">
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    </div>
+    {% endblock %}
+    <script src="{% static 'js/jquery-3.7.1.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
+    <script>
+
+    </script>
+</body>
+
+</html>
