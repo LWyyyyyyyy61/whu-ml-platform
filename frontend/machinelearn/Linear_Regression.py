@@ -129,17 +129,17 @@ def training(file_path, target_column, train_ratio, learning_nums,learning_rate)
     model, split_idx = custom_linear_regression(X, y, train_ratio, learning_nums,learning_rate)
 
     # 保存模型
-    torch.save(model.state_dict(), f'media/linear_model_{0}.pth')
+    torch.save(model.state_dict(), f'media/linear_model_{learning_nums}.pth')
 
     # 加载模型
     loaded_model = SimpleLinearModel()
-    loaded_model.load_state_dict(torch.load(f'media/linear_model_{0}.pth'))
+    loaded_model.load_state_dict(torch.load(f'media/linear_model_{learning_nums}.pth'))
     loaded_model.eval()
 
     # 测试加载的模型
     with torch.no_grad():
         test_predictions = loaded_model(torch.tensor(X[split_idx:], dtype=torch.float32).view(-1, 1)).numpy()
-        print(f'Test Predictions for model {0}:', test_predictions)
+        print(f'Test Predictions for model {learning_nums}:', test_predictions)
 
 
 

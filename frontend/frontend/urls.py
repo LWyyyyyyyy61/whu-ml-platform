@@ -25,11 +25,13 @@ from django.conf import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('machinelearn.urls')),
+   
     path("register/",views.register,name='register'),
-    path("login/",views.login,name='login'),
+     path("login/",views.login,name='login'),
     path("home/",views.home,name='home'),
     path('upload/', views.upload_file, name='upload_file'),
     path('user/',views.userinf,name='user'),
-    path('information/',views.information,name='information')
+    path('information/',views.information,name='information'),
+     
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

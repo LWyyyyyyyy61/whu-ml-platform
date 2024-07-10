@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>welcome to machine learn</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css' %}">
+</head>
+
+<body>
+    {% block content %}
+    <div class="container-fluid " style="margin-top: 1%;">
+        <div class="panel panel-default col-md-4 col-md-offset-1 ">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">linear_Regression</h3>
+                </div>
+                <div class="panel-body">
+                    <a href="{% url 'LinearRegress' %}">Linear regression is a statistical predictive analysis method
+                        primarily used to study the linear relationship between independent variables (features) and a
+                        dependent variable (target).
+                        It assumes that the relationship between these variables can be represented by a straight line
+                        (for one-dimensional features) or a hyperplane (for multi-dimensional features).
+                        During the training process of a linear regression model, the algorithm determines the best fit
+                        of this line or hyperplane by minimizing the difference between predicted values and actual
+                        values (often using mean squared error as the loss function).
+                        Due to its simplicity, high computational efficiency, and ease of interpretation, linear
+                        regression is commonly used in scenarios where continuous numerical results are predicted, such
+                        as housing price prediction and sales estimation.click me to use it
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="panel panel-default col-md-4 ">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Decision Tree Regression</h3>
+                </div>
+                <div class="panel-body">
+                    <a href="{% url 'DesTree' %}"> tree regression is the application of decision tree algorithms in
+                        regression tasks.
+                        It differs from classification decision trees mainly in that the leaf nodes store continuous
+                        numerical values instead of category labels.
+                        In building a decision tree, the algorithm continuously splits the dataset into subsets based on
+                        different feature values until certain stopping conditions are met, such as reaching the maximum
+                        depth or the variance within the node's data falling below a certain threshold. For predictions
+                        on new samples, decision tree regression starts from the root node and traverses down the
+                        branches that satisfy the sample's features until it reaches a leaf node. The average value or
+                        weighted average stored in the leaf node then becomes the predicted value.
+                        Decision tree regression excels at handling non-linear relationships and offers strong
+                        interpretability, facilitating understanding and diagnosis of prediction results.click me to use
+                        it
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    <script src="{% static 'js/jquery-3.7.1.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
+</body>
+
+</html>

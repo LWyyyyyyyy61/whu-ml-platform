@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css' %}">
+    {% block css %}
+    <!-- <link rel="stylesheet" href="{% static 'path/to/your.css' %}"> -->
+    {% endblock %}
     <style>
         .hide {
             display: none;
@@ -43,22 +46,19 @@
 
     <!-- 主要内容区域 -->
     <div class="container-fluid">
-        <div class="row">
-            <!-- 侧边栏 -->
-            <div class="col-md-2 d-none d-md-block">
-                {% include 'components/sidebar.html' %}
-            </div>
-
-            <div class="col-md-10">
-                {% block content %}
-                {% endblock %}
-            </div>
+        <div class="col-md-12">
+            {% block content %}
+            {% endblock %}
         </div>
     </div>
 
     <script src="{% static 'js/jquery-3.7.1.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
+    <!-- Scripts -->
+    {% block scripts %}
+    <!-- <script src="{% static 'path/to/your.js' %}"></script> -->
+    {% endblock %}
     <script>
         function clickMe(self) {
             var hashide = $(self).next().hasClass("hide");
