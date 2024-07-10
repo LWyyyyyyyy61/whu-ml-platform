@@ -6,13 +6,15 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 import torch
+from django.core.files.storage import default_storage
 
-# 全局变量
-global_val = 2
 
-def preprocess_data(file_path, target_column):
-    # 读取 CSV 文件
-    df = pd.read_csv(file_path)
+def preprocess_data(file_path, target_column,train_ratio=0.8,random_state=65536):
+    # 获取文件的本地路径
+    local_file_path = default_storage.path(file_path)
+
+    # 使用正确的路径读取 CSV 文件
+    df = pd.read_csv(local_file_path)
 
     # 删除不必要的列（如果 rownames 列无用，可以删除）
     if 'rownames' in df.columns:
@@ -42,7 +44,7 @@ def preprocess_data(file_path, target_column):
     X_scaled = scaler.fit_transform(X)
 
     # 数据拆分
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=(1-train_ratio), random_state=random_state)
 
     # 转换为 PyTorch 张量
     X_train = torch.tensor(X_train, dtype=torch.float32)
@@ -52,7 +54,7 @@ def preprocess_data(file_path, target_column):
 
     return X_train, X_test, y_train, y_test
 
-def plot_decision_tree(model, X_test, y_test, feature_name, iteration):
+def plot_decision_tree(model, X_test, y_test, feature_name):
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     cm = confusion_matrix(y_test, y_pred)
@@ -70,13 +72,13 @@ def plot_decision_tree(model, X_test, y_test, feature_name, iteration):
     plt.ylabel('Target')
     plt.legend()
     plt.tight_layout()
-    plt.savefig(f"decision_tree_plot_{iteration}.png")
+    plt.savefig(f"media/decision_tree_plot_{feature_name}.png")
     plt.close()
 
     # 显示混淆矩阵并添加数字
     plt.figure(figsize=(8, 6))
     plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
-    plt.title(f'Confusion Matrix for iteration {iteration}')
+    plt.title(f'Confusion Matrix for  {feature_name}')
     plt.colorbar()
     tick_marks = np.arange(len(np.unique(y_test)))
     plt.xticks(tick_marks, np.unique(y_test), rotation=45)
@@ -92,11 +94,11 @@ def plot_decision_tree(model, X_test, y_test, feature_name, iteration):
     plt.xlabel('Predicted Label')
     plt.ylabel('True Label')
     plt.tight_layout()
-    plt.savefig(f"confusion_matrix_{iteration}.png")
+    plt.savefig(f"media/confusion_matrix_{feature_name}.png")
     plt.close()
 
-def train_decision_tree_classifier(X_train, y_train):
-    model = DecisionTreeClassifier(random_state=42)
+def train_decision_tree_classifier(X_train, y_train,random_state=65536):
+    model = DecisionTreeClassifier(random_state=random_state)
     model.fit(X_train, y_train)
     return model
 
@@ -111,16 +113,20 @@ def load_model(filepath):
     print(f'Model loaded from {filepath}')
     return model
 
-# 使用示例
-file_path = '/home/asus/Thyroid_Diff.csv'
-target_column = 'Recurred'
-X_train, X_test, y_train, y_test = preprocess_data(file_path, target_column)
+def training(file_path,target_column,train_ratio,random_state):
+    # 使用示例
+    train_ratio = float(train_ratio)
+    random_state = int(random_state)
 
-for j in range(global_val):
+    X_train, X_test, y_train, y_test = preprocess_data(file_path, target_column,train_ratio,random_state)
+
     # 使用所有特征进行训练
-    model = train_decision_tree_classifier(X_train.numpy(), y_train.numpy())
-    plot_decision_tree(model, X_test.numpy(), y_test.numpy(), feature_name=f"Feature {j}", iteration=j)
+    model = train_decision_tree_classifier(X_train.numpy(), y_train.numpy(),random_state)
+    plot_decision_tree(model, X_test.numpy(), y_test.numpy(), feature_name=f"Feature {target_column}")
 
     # 保存模型
-    model_path = f'decision_tree_model_{j}.joblib'
+    model_path = f'media/decision_tree_model_{target_column}.joblib'
     save_model(model, model_path)
+
+# if __name__ == '__main__':
+#     training('F:/datasets/datasets/iris.csv','Species',0.8,65536)
