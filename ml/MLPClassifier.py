@@ -7,16 +7,17 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import seaborn as sns
+from torch.utils.data import TensorDataset, DataLoader
+from django.core.files.storage import default_storage
 
-# 全局变量
-global_val = 2
+def preprocess_data(file_path, target_column, train_ratio=0.8, random_state=65536):
+    # 获取文件的本地路径
+    local_file_path = default_storage.path(file_path)
 
-def preprocess_data(file_path, target_column):
-    # 读取 CSV 文件
-    df = pd.read_csv(file_path)
+    # 使用正确的路径读取 CSV 文件
+    df = pd.read_csv(local_file_path)
 
-    # 删除不必要的列（如果 rownames 列无用，可以删除）
+    # 删除不必要的列（如果 'rownames' 列无用，可以删除）
     if 'rownames' in df.columns:
         df.drop('rownames', axis=1, inplace=True)
 
@@ -44,7 +45,7 @@ def preprocess_data(file_path, target_column):
     X_scaled = scaler.fit_transform(X)
 
     # 数据拆分
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=(1 - train_ratio), random_state=random_state)
 
     # 转换为 PyTorch 张量
     X_train = torch.tensor(X_train, dtype=torch.float32)
@@ -54,9 +55,9 @@ def preprocess_data(file_path, target_column):
 
     return X_train, X_test, y_train, y_test
 
-class SimpleMLP(nn.Module):
+class MLPClassifier(nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
-        super(SimpleMLP, self).__init__()
+        super(MLPClassifier, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.relu = nn.ReLU()
         self.fc2 = nn.Linear(hidden_size, num_classes)
@@ -67,9 +68,56 @@ class SimpleMLP(nn.Module):
         out = self.fc2(out)
         return out
 
-def train_mlp_classifier(X_train, y_train, input_size, hidden_size, num_classes, num_epochs=100, learning_rate=0.001):
-    model = SimpleMLP(input_size, hidden_size, num_classes)
+def plot_mlp_results(model, X_test, y_test, feature_name):
+    model.eval()
+    y_pred = model(X_test)
+    _, predicted = torch.max(y_pred, 1)
+    y_pred = predicted.numpy()
+    y_test = y_test.numpy()
 
+    accuracy = accuracy_score(y_test, y_pred)
+    cm = confusion_matrix(y_test, y_pred)
+
+    plt.figure(figsize=(10, 6))
+    plt.scatter(X_test[:, 0], X_test[:, 1], c=y_test, cmap='viridis', label='True labels')
+    plt.scatter(X_test[:, 0], X_test[:, 1], c=y_pred, cmap='coolwarm', alpha=0.5, label='Predicted labels')
+
+    plt.text(0.95, 0.95, f'Accuracy: {accuracy:.2f}',
+             verticalalignment='top', horizontalalignment='right',
+             transform=plt.gca().transAxes,
+             bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
+
+    plt.xlabel(f'{feature_name} (Test Data)')
+    plt.ylabel('Target')
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(f"media/mlp_plot_{feature_name}.png")
+    plt.close()
+
+    # 显示混淆矩阵并添加数字
+    plt.figure(figsize=(8, 6))
+    plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+    plt.title(f'Confusion Matrix for {feature_name}')
+    plt.colorbar()
+    tick_marks = np.arange(len(np.unique(y_test)))
+    plt.xticks(tick_marks, np.unique(y_test), rotation=45)
+    plt.yticks(tick_marks, np.unique(y_test))
+
+    # 添加数字
+    thresh = cm.max() / 2.
+    for i, j in np.ndindex(cm.shape):
+        plt.text(j, i, format(cm[i, j], 'd'),
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
+
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.tight_layout()
+    plt.savefig(f"media/mlp_confusion_matrix_{feature_name}.png")
+    plt.close()
+
+def train_mlp_classifier(X_train, y_train, input_size, hidden_size, num_classes, num_epochs=100, learning_rate=0.001):
+    model = MLPClassifier(input_size, hidden_size, num_classes)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -81,73 +129,41 @@ def train_mlp_classifier(X_train, y_train, input_size, hidden_size, num_classes,
         loss.backward()
         optimizer.step()
 
-        if (epoch+1) % 10 == 0:
+        if (epoch + 1) % 10 == 0:
             print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
 
     return model
-
-def evaluate_model(model, X_test, y_test, iteration):
-    model.eval()
-    with torch.no_grad():
-        outputs = model(X_test)
-        _, predicted = torch.max(outputs.data, 1)
-        accuracy = accuracy_score(y_test.numpy(), predicted.numpy())
-        cm = confusion_matrix(y_test.numpy(), predicted.numpy())
-        print(f'Accuracy: {accuracy:.2f}')
-        print(f'Confusion Matrix:\n{cm}')
-
-        # 保存混淆矩阵图片
-        save_confusion_matrix_plot(cm, iteration)
-
-        return accuracy, cm
-
-def save_confusion_matrix_plot(cm, iteration):
-    plt.figure(figsize=(8, 6))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
-    plt.xlabel('Predicted')
-    plt.ylabel('Actual')
-    plt.title(f'Confusion Matrix for iteration {iteration}')
-    plt.tight_layout()
-    plt.savefig(f"confusion_matrix_{iteration}.png")
-    plt.close()
 
 def save_model(model, filepath):
     torch.save(model.state_dict(), filepath)
     print(f'Model saved to {filepath}')
 
 def load_model(filepath, input_size, hidden_size, num_classes):
-    model = SimpleMLP(input_size, hidden_size, num_classes)
+    model = MLPClassifier(input_size, hidden_size, num_classes)
     model.load_state_dict(torch.load(filepath))
     model.eval()
     print(f'Model loaded from {filepath}')
     return model
 
-# 使用示例
-file_path = '/home/asus/Thyroid_Diff.csv'
-target_column = 'Recurred'
-X_train, X_test, y_train, y_test = preprocess_data(file_path, target_column)
+def training(file_path, target_column, train_ratio, random_state, hidden_size, num_epochs, learning_rate):
+    # 使用示例
+    train_ratio = float(train_ratio)
+    random_state = int(random_state)
+    hidden_size = int(hidden_size)
+    num_epochs = int(num_epochs)
+    learning_rate = float(learning_rate)
 
-input_size = X_train.shape[1]
-hidden_size = 128
-num_classes = len(np.unique(y_train))
 
-# 训练模型
-model = train_mlp_classifier(X_train, y_train, input_size, hidden_size, num_classes, num_epochs=100)
+    X_train, X_test, y_train, y_test = preprocess_data(file_path, target_column, train_ratio, random_state)
+    input_size = X_train.shape[1]
+    num_classes = len(np.unique(y_train))
+    # 使用所有特征进行训练
+    model = train_mlp_classifier(X_train, y_train, input_size, hidden_size, num_classes, num_epochs, learning_rate)
+    plot_mlp_results(model, X_test, y_test, feature_name=f"Feature {target_column}")
 
-# 评估模型
-accuracy, cm = evaluate_model(model, X_test, y_test, iteration=1)
+    # 保存模型
+    model_path = f'media/mlp_model_{target_column}.pth'
+    save_model(model, model_path)
 
-# 保存模型
-model_path = 'mlp_model.pth'
-save_model(model, model_path)
-
-# 加载模型
-loaded_model = load_model(model_path, input_size, hidden_size, num_classes)
-
-# 测试加载的模型
-# 假设 X_test 和 y_test 是新的测试数据
-# 需要将测试数据转换为 PyTorch 张量
-X_test_tensor = torch.tensor(X_test, dtype=torch.float32)
-y_test_tensor = torch.tensor(y_test, dtype=torch.long)
-
-evaluate_model(loaded_model, X_test_tensor, y_test_tensor, iteration=2)
+# if __name__ == '__main__':
+#     training('F:/datasets/datasets/iris.csv', 'Species', 0.8, 65536, 10,1000,0.001)
