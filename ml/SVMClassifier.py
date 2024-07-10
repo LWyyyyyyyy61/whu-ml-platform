@@ -3,24 +3,31 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
-from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
-import joblib
+import torch
+from django.core.files.storage import default_storage
 
-def read_data(file_path, column_names=None):
-    if file_path.endswith('.csv'):
-        return pd.read_csv(file_path)
-    elif file_path.endswith('.data'):
-        return pd.read_csv(file_path, sep='\s+', header=None, names=column_names)
-    else:
-        raise ValueError("Unsupported file format")
 
-def preprocess_data(file_path, target_column, column_names=None):
-    df = read_data(file_path, column_names)
+def preprocess_data(file_path, target_column, train_ratio=0.8, random_state=65536):
+    # 获取文件的本地路径
+    local_file_path = default_storage.path(file_path)
 
+    # 使用正确的路径读取 CSV 文件
+    df = pd.read_csv(local_file_path)
+
+    # 删除不必要的列（如果 rownames 列无用，可以删除）
     if 'rownames' in df.columns:
         df.drop('rownames', axis=1, inplace=True)
 
+    # 处理缺失值（填补数值型缺失值为均值，类别型缺失值为众数）
+    for column in df.columns:
+        if df[column].dtype == 'object':
+            df.fillna({column: df[column].mode()[0]}, inplace=True)
+        else:
+            df.fillna({column: df[column].mean()}, inplace=True)
+
+    # 编码类别变量
     label_encoders = {}
     categorical_columns = df.select_dtypes(include=['object']).columns
     for column in categorical_columns:
@@ -28,79 +35,98 @@ def preprocess_data(file_path, target_column, column_names=None):
         df[column] = le.fit_transform(df[column])
         label_encoders[column] = le
 
-    for column in df.columns:
-        if df[column].dtype == 'object':
-            df[column].fillna(df[column].mode()[0], inplace=True)
-        else:
-            df[column].fillna(df[column].mean(), inplace=True)
-
-    if df.isnull().sum().sum() > 0:
-        df = df.dropna()
-
-    if df.empty:
-        raise ValueError("Dataframe is empty after handling NaN values.")
-
-    scaler = StandardScaler()
-    numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns
-    df[numeric_columns] = scaler.fit_transform(df[numeric_columns])
-
-    # 将目标变量转换为二分类
-    median_value = df[target_column].median()
-    df[target_column] = (df[target_column] > median_value).astype(int)
-
+    # 特征和目标变量分离
     X = df.drop(target_column, axis=1).values
     y = df[target_column].values
-    return X, y, label_encoders
 
-def plot_confusion_matrix(cm, classes, title='Confusion matrix', cmap=plt.cm.Blues):
-    plt.figure(figsize=(10, 6))
-    plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    plt.title(title)
-    plt.colorbar()
-    tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
-    plt.yticks(tick_marks, classes)
+    # 特征缩放
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
 
-    fmt = 'd'
-    thresh = cm.max() / 2.
-    for i, j in np.ndindex(cm.shape):
-        plt.text(j, i, format(cm[i, j], fmt),
-                 ha="center", va="center",
-                 color="white" if cm[i, j] > thresh else "black")
+    # 数据拆分
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=(1 - train_ratio), random_state=random_state)
 
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')
-    plt.tight_layout()
-    plt.savefig(f"{title}.png")
-    plt.close()
+    # 转换为 PyTorch 张量
+    X_train = torch.tensor(X_train, dtype=torch.float32)
+    X_test = torch.tensor(X_test, dtype=torch.float32)
+    y_train = torch.tensor(y_train, dtype=torch.long)  # 如果是分类任务，标签需要是 long 类型
+    y_test = torch.tensor(y_test, dtype=torch.long)
 
-def train_and_evaluate_model(model, X_train, y_train, X_test, y_test, model_name, label_encoders, target_column):
-    model.fit(X_train, y_train)
+    return X_train, X_test, y_train, y_test
+
+def plot_random_forest(model, X_test, y_test, feature_name):
     y_pred = model.predict(X_test)
-
     accuracy = accuracy_score(y_test, y_pred)
     cm = confusion_matrix(y_test, y_pred)
-    target_labels = [0, 1]  # 二分类标签
 
-    plot_confusion_matrix(cm, target_labels, title=f'{model_name} Confusion Matrix')
-    print(f"{model_name} Accuracy: {accuracy:.2f}")
-    print(f"{model_name} Confusion Matrix:\n{cm}")
+    plt.figure(figsize=(10, 6))
+    plt.scatter(X_test[:, 0], X_test[:, 1], c=y_test, cmap='viridis', label='True labels')
+    plt.scatter(X_test[:, 0], X_test[:, 1], c=y_pred, cmap='coolwarm', alpha=0.5, label='Predicted labels')
 
-def main():
-    file_path = '/home/asus/Thyroid_Diff.csv'  # 修改为你的数据文件路径
-    target_column = 'Recurred'  # 修改为你的目标列名称
-    column_names = None  # 如果是 .data 文件，请提供列名称列表
-    model_path = 'svm_model.joblib'
+    plt.text(0.95, 0.95, f'Accuracy: {accuracy:.2f}',
+             verticalalignment='top', horizontalalignment='right',
+             transform=plt.gca().transAxes,
+             bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
 
-    X, y, label_encoders = preprocess_data(file_path, target_column, column_names)
+    plt.xlabel(f'{feature_name} (Test Data)')
+    plt.ylabel('Target')
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(f"media/random_forest_plot_{feature_name}.png")
+    plt.close()
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    # 显示混淆矩阵并添加数字
+    plt.figure(figsize=(8, 6))
+    plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+    plt.title(f'Confusion Matrix for  {feature_name}')
+    plt.colorbar()
+    tick_marks = np.arange(len(np.unique(y_test)))
+    plt.xticks(tick_marks, np.unique(y_test), rotation=45)
+    plt.yticks(tick_marks, np.unique(y_test))
 
-    model = SVC(random_state=42)
-    train_and_evaluate_model(model, X_train, y_train, X_test, y_test, 'SVM', label_encoders, target_column)
+    # 添加数字
+    thresh = cm.max() / 2.
+    for i, j in np.ndindex(cm.shape):
+        plt.text(j, i, format(cm[i, j], 'd'),
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
 
-    joblib.dump(model, model_path)
-    print(f"Model saved to {model_path}")
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.tight_layout()
+    plt.savefig(f"media/random_forest_confusion_matrix_{feature_name}.png")
+    plt.close()
 
-if __name__ == "__main__":
-    main()
+def train_random_forest_classifier(X_train, y_train, random_state=65536):
+    model = RandomForestClassifier(random_state=random_state)
+    model.fit(X_train, y_train)
+    return model
+
+def save_model(model, filepath):
+    import joblib
+    joblib.dump(model, filepath)
+    print(f'Model saved to {filepath}')
+
+def load_model(filepath):
+    import joblib
+    model = joblib.load(filepath)
+    print(f'Model loaded from {filepath}')
+    return model
+
+def training(file_path, target_column, train_ratio, random_state):
+    # 使用示例
+    train_ratio = float(train_ratio)
+    random_state = int(random_state)
+
+    X_train, X_test, y_train, y_test = preprocess_data(file_path, target_column, train_ratio, random_state)
+
+    # 使用所有特征进行训练
+    model = train_random_forest_classifier(X_train.numpy(), y_train.numpy(), random_state)
+    plot_random_forest(model, X_test.numpy(), y_test.numpy(), feature_name=f"Feature {target_column}")
+
+    # 保存模型
+    model_path = f'media/random_forest_model_{target_column}.joblib'
+    save_model(model, model_path)
+
+# if __name__ == '__main__':
+#     training('F:/datasets/datasets/iris.csv', 'Species', 0.8, 65536)

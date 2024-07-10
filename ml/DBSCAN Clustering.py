@@ -6,15 +6,16 @@ from sklearn.model_selection import train_test_split
 from sklearn.cluster import DBSCAN
 from sklearn.metrics import silhouette_score
 import joblib
-
+from django.core.files.storage import default_storage
 def read_data(file_path, column_names=None):
-    if file_path.endswith('.csv'):
+    # 获取文件的本地路径
+    local_file_path = default_storage.path(file_path)
+    if local_file_path.endswith('.csv'):
         return pd.read_csv(file_path)
-    elif file_path.endswith('.data'):
+    elif local_file_path.endswith('.data'):
         return pd.read_csv(file_path, sep='\s+', header=None, names=column_names)
     else:
         raise ValueError("Unsupported file format")
-
 def preprocess_data_unsupervised(file_path):
     df =read_data(file_path)  # 转换为DataFrame
 
@@ -68,7 +69,7 @@ def plot_clusters(X, labels, title='DBSCAN Clustering'):
                  markeredgecolor='k', markersize=6)
 
     plt.title(title)
-    plt.savefig(f"{title}.png")
+    plt.savefig(f"media/{title}.png")
     plt.close()
 
 
@@ -85,11 +86,10 @@ def train_and_evaluate_model(X, eps, min_samples, model_name):
     plot_clusters(X, labels, title=f'{model_name} Clustering')
 
 
-def main():
-    file_path = 'F:/datasets/datasets/iris.csv'  # 修改为你的数据文件路径
-    model_path = 'dbscan_model.joblib'
-    eps = 0.5  # 修改为所需的DBSCAN参数
-    min_samples = 5  # 修改为所需的DBSCAN参数
+def training(file_path,eps, min_samples):
+    model_path = '../media/dbscan_model.joblib'
+    eps=float(eps)
+    min_samples=int(min_samples)
 
     X = preprocess_data_unsupervised(file_path)
 
@@ -101,6 +101,6 @@ def main():
     print(f"Model saved to {model_path}")
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     training('F:/datasets/datasets/iris.csv',1.0,5)
 

@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.cluster import KMeans
@@ -8,16 +7,17 @@ import joblib
 from django.core.files.storage import default_storage
 
 def read_data(file_path, column_names=None):
-    local_file_path = default_storage.path(file_path)  # 获取文件的本地路径
+    # 获取文件的本地路径
+    local_file_path = default_storage.path(file_path)
     if local_file_path.endswith('.csv'):
-        return pd.read_csv(local_file_path)
+        return pd.read_csv(file_path)
     elif local_file_path.endswith('.data'):
-        return pd.read_csv(local_file_path, sep='\s+', header=None, names=column_names)
+        return pd.read_csv(file_path, sep='\s+', header=None, names=column_names)
     else:
         raise ValueError("Unsupported file format")
 
 def preprocess_data_unsupervised(file_path):
-    df = read_data(file_path)  # 转换为DataFrame
+    df =read_data(file_path)  # 转换为DataFrame
 
     # 删除指定列名（如果有的话）
     if 'rownames' in df.columns:
@@ -50,43 +50,40 @@ def preprocess_data_unsupervised(file_path):
     df[numeric_columns] = scaler.fit_transform(df[numeric_columns])
 
     X = df.values  # 返回预处理后的特征矩阵
-    feature_names = df.columns.tolist()  # 获取特征名
 
-    return X, feature_names
-
-def plot_clusters(X, labels, centroids, feature_names, title='K-Means Clustering'):
+    return X
+def plot_clusters(X, labels, centroids, title='K-Means Clustering'):
     plt.figure(figsize=(10, 6))
     plt.scatter(X[:, 0], X[:, 1], c=labels, s=50, cmap='viridis')
     plt.scatter(centroids[:, 0], centroids[:, 1], c='red', s=200, alpha=0.75, marker='X')
-    plt.xlabel(feature_names[0])
-    plt.ylabel(feature_names[1])
     plt.title(title)
-    plot_path = default_storage.save(f"{title}.png", plt)
+    plt.savefig(f"media/{title}.png")
     plt.close()
-    return plot_path
 
-def train_and_evaluate_model(X, num_clusters, feature_names, model_name):
-    model = KMeans(n_clusters=num_clusters, random_state=42)
+def train_and_evaluate_model(X, num_clusters, model_name,random_state=65536):
+    model = KMeans(n_clusters=num_clusters, random_state=random_state)
     labels = model.fit_predict(X)
 
     silhouette_avg = silhouette_score(X, labels)
     centroids = model.cluster_centers_
 
-    plot_path = plot_clusters(X, labels, centroids, feature_names, title=f'{model_name} Clustering')
+    plot_clusters(X, labels, centroids, title=f'{model_name} Clustering')
     print(f"{model_name} Silhouette Score: {silhouette_avg:.2f}")
-    return plot_path
 
-def main(file_path,num_clusters):
-    model_path = 'media/kmeans_model.joblib'
+def training(file_path ,num_clusters, random_state):
+    num_clusters= int(num_clusters)
+    random_state= int(random_state)
+    model_path = f'media/Kmeans_model.joblib'
 
-    X, feature_names = preprocess_data_unsupervised(file_path)
-    plot_path = train_and_evaluate_model(X, num_clusters, feature_names, 'K-Means')
 
-    model = KMeans(n_clusters=num_clusters, random_state=42)
+    X = preprocess_data_unsupervised(file_path)
+
+    train_and_evaluate_model(X, num_clusters, 'K-Means',random_state=random_state)
+
+    model = KMeans(n_clusters=num_clusters, random_state=random_state)
     model.fit(X)
-    joblib.dump(model, default_storage.save(model_path, model))
+    joblib.dump(model, model_path)
     print(f"Model saved to {model_path}")
-    print(f"Plot saved to {plot_path}")
 
-if __name__ == "__main__":
-    main('/home/asus/datasets/Thyroid_Diff.csv',3)
+# if __name__ == "__main__":
+#     training('F:/datasets/datasets/iris.csv',3,65536)
