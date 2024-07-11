@@ -356,15 +356,15 @@ def DBSCAN(request):
             uploadfile=request.FILES['regresfile1']
             file_path = default_storage.save(uploadfile.name, uploadfile)
             training8(file_path,exeq,ct)
-            image_path = default_storage.url(f'{ct}.png')
-            model_url = default_storage.url(f'Kmeans_model_{ct}.joblib')
+            image_path = default_storage.url(f'{ct}_DBSCAN.png')
+            model_url = default_storage.url(f'dbscan_model_{ct}.joblib')
             return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
         elif(not exeq and not ct):
             uploadfile=request.FILES['regresfile']
             file_path = default_storage.save(uploadfile.name, uploadfile)
             training8(file_path,1.0,5)
-            image_path = default_storage.url(f'{ct}.png')
-            model_url = default_storage.url(f'dbscan_model_{ct}.joblib')
+            image_path = default_storage.url(f'{5}_DBSCAN.png')
+            model_url = default_storage.url(f'dbscan_model_{5}.joblib')
             return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
         else:
             return HttpResponse("提交失败请完整填写参数")

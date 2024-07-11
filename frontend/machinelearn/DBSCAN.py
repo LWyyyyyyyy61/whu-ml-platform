@@ -69,7 +69,7 @@ def plot_clusters(X, labels,min_samples, title='DBSCAN Clustering'):
                  markeredgecolor='k', markersize=6)
 
     plt.title(title)
-    plt.savefig(f"media/{min_samples}.png")
+    plt.savefig(f"media/{min_samples}_DBSCAN.png")
     plt.close()
 
 
