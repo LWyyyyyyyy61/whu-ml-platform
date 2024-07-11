@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>welcome to machine learn</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css' %}">
+</head>
+
+<body>
+    {% block content %}
+    <div class="container-fluid " style="margin-top: 1%;">
+        <div class="panel panel-default col-md-4 col-md-offset-1" style="border-color:white">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">K Means</h3>
+                </div>
+                <div class="panel-body">
+                    <a href="#">K-Means is a simple and efficient unsupervised clustering algorithm. It iteratively
+                        partitions the data into K clusters, minimizing the average distance between each sample and the
+                        centroid of the cluster it belongs to. K-Means is easy to implement and has fast convergence for
+                        large-scale data, but it requires the number of clusters K to be pre-defined and is sensitive to
+                        outliers and noise.
+                    </a>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Hierarchical Clustering</h3>
+                </div>
+                <div class="panel-body">
+                    <a href="#">Hierarchical clustering is a bottom-up clustering method that recursively merges similar
+                        data samples into clusters, constructing a hierarchical tree-like structure. It does not require
+                        the number of clusters to be specified in advance, allowing the observation of the data's
+                        hierarchical structure. Hierarchical clustering can handle non-convex shaped clusters, but has
+                        lower computational efficiency for large-scale data and the results may be affected by the
+                        initial conditions.
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-1"></div>
+        <div class="panel panel-default col-md-4" style="border-color:white">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">DBSCAN</h3>
+                </div>
+                <div class="panel-body">
+                    <a href="#">DBSCAN is a density-based clustering algorithm that identifies clusters by recognizing
+                        dense regions in the data. It does not require the number of clusters to be specified and can
+                        automatically detect noise samples. DBSCAN is robust to noise and outliers, and can discover
+                        clusters of arbitrary shapes, but may perform poorly when the data has significant differences
+                        in density and cluster sizes, and its computational complexity increases with the number of
+                        samples.
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {% endblock %}
+    <script src="{% static 'js/jquery-3.7.1.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
+</body>
+
+</html>
