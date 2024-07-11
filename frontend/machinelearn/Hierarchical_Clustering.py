@@ -12,9 +12,9 @@ def read_data(file_path, column_names=None):
     # 获取文件的本地路径
     local_file_path = default_storage.path(file_path)
     if local_file_path.endswith('.csv'):
-        return pd.read_csv(file_path)
+        return pd.read_csv(local_file_path)
     elif local_file_path.endswith('.data'):
-        return pd.read_csv(file_path, sep='\s+', header=None, names=column_names)
+        return pd.read_csv(local_file_path, sep='\s+', header=None, names=column_names)
     else:
         raise ValueError("Unsupported file format")
 
@@ -82,12 +82,12 @@ def train_and_evaluate_model(X, model_name,random_state=65536):
     plt.title(f'{model_name} Dendrogram')
     plt.xlabel('Sample Index')
     plt.ylabel('Distance')
-    plt.savefig(f"media/{model_name}_dendrogram.png")
+    plt.savefig(f"media/{random_state}_dendrogram.png")
     plt.close()
 
-def training(file_path, random_state=65536):
+def training7(file_path, random_state=65536):
     model_name = 'Agglomerative'
-    model_path = f'media/{model_name}_model.joblib'
+    model_path = f'media/{random_state}_model.joblib'
     random_state = int(random_state)
     X = preprocess_data_unsupervised(file_path)
     train_and_evaluate_model(X, model_name, random_state=random_state)

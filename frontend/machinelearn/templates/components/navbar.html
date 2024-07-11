@@ -16,16 +16,16 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <!-- <li class="active"><a href="#">model <span class="sr-only">(current)</span></a></li> -->
-                <li><a href="{% url 'Modelintro' %}">Model introduction</a></li>
+                <li><a href="{% url 'Modelintro' %}">模型介绍</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                        aria-expanded="false">model<span class="caret"></span></a>
+                        aria-expanded="false">机器学习模型<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'Regress' %}">Regression</a></li>
-                        <li><a href="{% url 'Classification' %}">Classification</a></li>
-                        <li><a href="{% url 'Clustering' %}">Clustering</a></li>
+                        <li><a href="{% url 'Regress' %}">回归模型</a></li>
+                        <li><a href="{% url 'Classification' %}">分类模型</a></li>
+                        <li><a href="{% url 'Clustering' %}">聚类模型</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="{% url 'information' %}">coming soon</a></li>
+                        <li><a href="{% url 'information' %}">敬请期待</a></li>
                     </ul>
                 </li>
             </ul>
@@ -36,17 +36,17 @@
                 <button type="submit" class="btn btn-default"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{% url 'information' %}">information</a></li>
+                <li><a href="{% url 'information' %}">更多信息</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                        aria-expanded="false"> <i class="fa-solid fa-house"></i>account
+                        aria-expanded="false"> <i class="fa-solid fa-house"></i>用户
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'user' %}">Users</a></li>
-                        <li><a href="#">history</a></li>
-                        <li><a href="#">Something else here</a></li>
+                        <li><a href="{% url 'user' %}">个人信息</a></li>
+                        <li><a href="#">使用记录</a></li>
+                        <li><a href="#">反馈</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="{% url 'login' %}">sign out</a></li>
+                        <li><a href="{% url 'login' %}">注销</a></li>
                     </ul>
                 </li>
             </ul>

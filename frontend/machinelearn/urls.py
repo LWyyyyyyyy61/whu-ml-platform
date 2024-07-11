@@ -15,5 +15,8 @@ urlpatterns = [
     path('RF/',views.RF,name='RF'),
     path('SVM/',views.SVM,name='SVM'),
     path('MLP/',views.MLP,name='MLP'),
+    path('kmeans/',views.Kmeans,name='Kmeans'),
+    path('Hierarchical/',views.Hierarchical,name='Hierarchical'),
+    path('DBSCAN/',views.DBSCAN,name='DBSCAN'),
 
 ]

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse
-from machinelearn.models import User
+from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
+from django.contrib import auth
 import os
 from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
@@ -12,6 +13,9 @@ from .Logical_Regression import training2
 from .Random_Forest import training3
 from .SVMClassifier import training4
 from .MLPClassifier import training5
+from .K_Means_ import training6
+from .Hierarchical_Clustering import training7
+from .DBSCAN import training8
 from django.core.files.storage import default_storage
 from django.contrib.auth.decorators import login_required
 import numpy as np
@@ -24,10 +28,18 @@ def login(request):
     else:
         username = request.POST.get('user')
         password = request.POST.get('pwd')
-    if username and password and User.objects.filter(username=username, password=password).exists():
-        return redirect('/home/')
-    else:
-        return redirect('/login/')
+        if username and password:
+            # 进行身份验证
+            
+            user = authenticate(username=username, password=password)
+            if user:
+                # 读者验证成功，执行逻辑或重定向到其他页面
+                auth.login(request,user)
+                return redirect('home/')
+            else:
+               return render(request, 'login.html', {'error': 'Invalid login credentials.'})
+        else:
+            return HttpResponse('请提供用户名和密码')    
 def register(request):
     if request.method == 'POST':
         username = request.POST.get('user')
@@ -37,54 +49,15 @@ def register(request):
         if User.objects.filter(username=username).exists():
             # 用户名已存在,提示用户尝试其他用户名
             return render(request, 'register.html', {'error': 'Username already exists. Please try a different one.'})
-        user = User.objects.create(username=username,password=password,email=email,phonenumber="1234567890")
+        user = User.objects.create_user(username=username,password=password,email=email)
+        user.save()
         return redirect('/login/')
     return render(request, "register.html")
 
-
+@login_required
 def home(request):
-    if request.method=='GET':
         return render(request,"home.html")
-    else:
-        exeq=request.POST.get('exerfqt')
-        frq=request.POST.get('learnfqt')
-        ct=request.POST.get('cont')
-
-        if (frq and ct and exeq):
-                target=request.POST.get('target1')
-                uploadfile=request.FILES['exampleInputFile1']
-                classop=request.POST.get('qescls1')
-                if classop=='cls':
-                    file_path = default_storage.save(uploadfile.name, uploadfile)
-                    training(file_path, target)
-                    image_path = default_storage.url(f'regression_plot_{1000}.png')
-                    model_url = default_storage.url(f'linear_model_0.pth')
-                    return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
-                elif classop=='bak':
-                    file_path = default_storage.save(uploadfile.name, uploadfile)
-                    training(file_path, target,exeq,ct,frq)
-                    image_path = default_storage.url(f'regression_plot_{ct}.png')
-                    model_url = default_storage.url(f'linear_model_0.pth')
-                    return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
-        elif ((frq and ct and ~exeq)or(~frq and ct and exeq)or(frq and ~ct and exeq)or(~frq and ~ct and exeq)or(frq and ~ct and ~exeq)or(~frq and ct and ~exeq)):
-            return HttpResponse("提交失败请完整填写参数")
-        else:
-            target=request.POST.get('target')
-            uploadfile=request.FILES['exampleInputFile']
-            classop=request.POST.get('qescls')    
-            if classop=='cls':
-                file_path = default_storage.save(uploadfile.name, uploadfile)
-                training(file_path, target)
-                image_path = default_storage.url(f'regression_plot_{1000}.png')
-                model_url = default_storage.url(f'linear_model_0.pth')
-                return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
-            elif classop=='bak':
-                file_path = default_storage.save(uploadfile.name, uploadfile)
-                training(file_path, target)
-                image_path = default_storage.url(f'regression_plot_{1000}.png')
-                model_url = default_storage.url(f'linear_model_0.pth')
-                return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
-
+@login_required
 def upload_file(request):
     
     if request.method == 'POST':
@@ -116,9 +89,10 @@ def upload_file(request):
     else:
         form = UploadFileForm()
         return render(request, 'upload.html', {'form': form})
-    
+@login_required   
 def userinf(request):
     return render(request,'user.html')
+@login_required
 def information(request):
     return render(request,'information.html')
 def Regress(request):
@@ -301,8 +275,8 @@ def MLP(request):
             model_url = default_storage.url(f'mlp_model_{ct}.pth')
             return render(request, 'result2.html', {'model_url': model_url, 'image_path': image_path,'image_path2':image_path2})
         elif(not ct and not exeq and not sj and not learcnt and not learnfqt):
-            target=request.POST.get('regretar1')
-            uploadfile=request.FILES['regresfile1']
+            target=request.POST.get('regretar')
+            uploadfile=request.FILES['regresfile']
             file_path = default_storage.save(uploadfile.name, uploadfile)
             training5(file_path, target,0.8,65536,10,1000,0.001)
             image_path = default_storage.url(f'mlp_plot_{65536}.png')
@@ -311,4 +285,67 @@ def MLP(request):
             return render(request, 'result2.html', {'model_url': model_url, 'image_path': image_path,'image_path2':image_path2})
         else:
             return HttpResponse("提交失败请完整填写参数")
-            
+def Kmeans(request):
+    if request.method=='GET':
+        return render(request,'cluster/Kmeans.html')
+    else:
+        exeq=request.POST.get('exerfqt')
+        ct=request.POST.get('cont')
+        if (exeq and ct):
+            uploadfile=request.FILES['regresfile1']
+            file_path = default_storage.save(uploadfile.name, uploadfile)
+            training6(file_path,exeq,ct)
+            image_path = default_storage.url(f'{ct}.png')
+            model_url = default_storage.url(f'Kmeans_model_{ct}.joblib')
+            return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+        elif(not exeq and not ct):
+            uploadfile=request.FILES['regresfile']
+            file_path = default_storage.save(uploadfile.name, uploadfile)
+            training6(file_path,3,65536)
+            image_path = default_storage.url(f'{65536}.png')
+            model_url = default_storage.url(f'Kmeans_model_{65536}.joblib')
+            return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+        else:
+            return HttpResponse("提交失败请完整填写参数")
+def Hierarchical(request):
+    if request.method=='GET':
+        return render(request,'cluster/Hierarchical.html')
+    else:
+        ct=request.POST.get('cont')
+        if (ct):
+            uploadfile=request.FILES['regresfile1']
+            file_path = default_storage.save(uploadfile.name, uploadfile)
+            training7(file_path,ct)
+            image_path = default_storage.url(f'{ct}_dendrogram.png')
+            model_url = default_storage.url(f'{ct}_model.joblib')
+            return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+        else:
+            uploadfile=request.FILES['regresfile']
+            file_path = default_storage.save(uploadfile.name, uploadfile)
+            training7(file_path,65536)
+            image_path = default_storage.url(f'{65536}_dendrogram.png')
+            model_url = default_storage.url(f'{65536}_model.joblib')
+            return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+def DBSCAN(request):
+    if request.method=='GET':
+        return render(request,'cluster/DBSCAN.html')
+    else:
+        exeq=request.POST.get('exerfqt')
+        ct=request.POST.get('cont')
+        if (exeq and ct):
+            uploadfile=request.FILES['regresfile1']
+            file_path = default_storage.save(uploadfile.name, uploadfile)
+            training8(file_path,exeq,ct)
+            image_path = default_storage.url(f'{ct}.png')
+            model_url = default_storage.url(f'Kmeans_model_{ct}.joblib')
+            return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+        elif(not exeq and not ct):
+            uploadfile=request.FILES['regresfile']
+            file_path = default_storage.save(uploadfile.name, uploadfile)
+            training8(file_path,1.0,5)
+            image_path = default_storage.url(f'{ct}.png')
+            model_url = default_storage.url(f'dbscan_model_{ct}.joblib')
+            return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+        else:
+            return HttpResponse("提交失败请完整填写参数")
+       

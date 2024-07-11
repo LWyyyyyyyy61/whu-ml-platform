@@ -11,9 +11,9 @@ def read_data(file_path, column_names=None):
     # 获取文件的本地路径
     local_file_path = default_storage.path(file_path)
     if local_file_path.endswith('.csv'):
-        return pd.read_csv(file_path)
+        return pd.read_csv(local_file_path)
     elif local_file_path.endswith('.data'):
-        return pd.read_csv(file_path, sep='\s+', header=None, names=column_names)
+        return pd.read_csv(local_file_path, sep='\s+', header=None, names=column_names)
     else:
         raise ValueError("Unsupported file format")
 def preprocess_data_unsupervised(file_path):
@@ -53,7 +53,7 @@ def preprocess_data_unsupervised(file_path):
 
     return X
 
-def plot_clusters(X, labels, title='DBSCAN Clustering'):
+def plot_clusters(X, labels,min_samples, title='DBSCAN Clustering'):
     plt.figure(figsize=(10, 6))
     unique_labels = set(labels)
     colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(unique_labels))]
@@ -69,7 +69,7 @@ def plot_clusters(X, labels, title='DBSCAN Clustering'):
                  markeredgecolor='k', markersize=6)
 
     plt.title(title)
-    plt.savefig(f"media/{title}.png")
+    plt.savefig(f"media/{min_samples}.png")
     plt.close()
 
 
@@ -83,11 +83,11 @@ def train_and_evaluate_model(X, eps, min_samples, model_name):
     else:
         print(f"{model_name} could not find enough clusters for Silhouette Score calculation.")
 
-    plot_clusters(X, labels, title=f'{model_name} Clustering')
+    plot_clusters(X, labels,min_samples, title=f'{model_name} Clustering')
 
 
-def training(file_path,eps, min_samples):
-    model_path = '../media/dbscan_model.joblib'
+def training8(file_path,eps, min_samples):
+    model_path = '../media/dbscan_model_{min_samples}.joblib'
     eps=float(eps)
     min_samples=int(min_samples)
 

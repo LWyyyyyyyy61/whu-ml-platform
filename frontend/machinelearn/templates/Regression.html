@@ -19,20 +19,14 @@
         <div class="panel panel-default col-md-4 col-md-offset-1" style="border-color:white">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h3 class="panel-title">linear_Regression</h3>
+                    <h3 class="panel-title">线性回归</h3>
                 </div>
                 <div class="panel-body">
-                    <a href="{% url 'LinearRegress' %}">Linear regression is a statistical predictive analysis method
-                        primarily used to study the linear relationship between independent variables (features) and a
-                        dependent variable (target).
-                        It assumes that the relationship between these variables can be represented by a straight line
-                        (for one-dimensional features) or a hyperplane (for multi-dimensional features).
-                        During the training process of a linear regression model, the algorithm determines the best fit
-                        of this line or hyperplane by minimizing the difference between predicted values and actual
-                        values (often using mean squared error as the loss function).
-                        Due to its simplicity, high computational efficiency, and ease of interpretation, linear
-                        regression is commonly used in scenarios where continuous numerical results are predicted, such
-                        as housing price prediction and sales estimation.click me to use it
+                    <a href="{% url 'LinearRegress' %}">线性回归是一种统计预测分析方法,主要用于研究独立变量(特征)和因变量(目标)之间的线性关系。
+                        它假设这些变量之间的关系可以用直线(一维特征)或超平面(多维特征)来表示。
+                        在线性回归模型的训练过程中,算法通过最小化预测值与实际值之间的差异(通常使用均方误差作为损失函数)来确定这条直线或超平面的最佳拟合。
+                        由于其简单性、高计算效率和易解释性,线性回归广泛应用于预测连续数值结果的场景,如房价预测和销售估计。
+                        click me to use it
                     </a>
                 </div>
             </div>
@@ -41,22 +35,15 @@
         <div class="panel panel-default col-md-4" style="border-color:white">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Decision Tree Regression</h3>
+                    <h3 class="panel-title">决策树回归</h3>
                 </div>
                 <div class="panel-body">
-                    <a href="{% url 'DesTree' %}"> tree regression is the application of decision tree algorithms in
-                        regression tasks.
-                        It differs from classification decision trees mainly in that the leaf nodes store continuous
-                        numerical values instead of category labels.
-                        In building a decision tree, the algorithm continuously splits the dataset into subsets based on
-                        different feature values until certain stopping conditions are met, such as reaching the maximum
-                        depth or the variance within the node's data falling below a certain threshold. For predictions
-                        on new samples, decision tree regression starts from the root node and traverses down the
-                        branches that satisfy the sample's features until it reaches a leaf node. The average value or
-                        weighted average stored in the leaf node then becomes the predicted value.
-                        Decision tree regression excels at handling non-linear relationships and offers strong
-                        interpretability, facilitating understanding and diagnosis of prediction results.click me to use
-                        it
+                    <a href="{% url 'DesTree' %}">
+                        决策树回归是一种基于决策树的监督学习算法,主要用于预测连续目标变量。
+                        它通过递归地将特征空间划分为多个简单的区域,并在每个区域内使用常数值(通常是区域内目标变量的平均值)进行预测。
+                        决策树回归的优点包括可解释性强、对异常值鲁棒性好、无需特征缩放等。
+                        它适用于各种类型的预测问题,如房价预测、销量预测等。
+                        click me to use it
                     </a>
 
                 </div>
