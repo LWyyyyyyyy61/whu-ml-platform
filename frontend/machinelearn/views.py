@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate,logout 
 from django.contrib import auth
 import os
 from django.shortcuts import render
@@ -18,6 +18,7 @@ from .Hierarchical_Clustering import training7
 from .DBSCAN import training8
 from django.core.files.storage import default_storage
 from django.contrib.auth.decorators import login_required
+import frontend.settings as settings
 import numpy as np
 
 # Create your views here.
@@ -95,14 +96,24 @@ def userinf(request):
 @login_required
 def information(request):
     return render(request,'information.html')
+@login_required
 def Regress(request):
     return render(request,'Regression.html')
+@login_required
 def Classification(request):
     return render(request,'Classification.html')
+@login_required
 def Clustering(request):
     return render(request,'Clustering.html')
+@login_required
 def Modelintro(request):
     return render(request,'Modelintro.html')
+@login_required
+def logout_view(request):
+    logout(request)
+    # 登出后重定向到的页面，可自定义
+    return redirect('/login/')
+@login_required
 def linearRegress(request):
     if request.method=='GET':
         return render(request,'Linear_Regression.html')
@@ -128,6 +139,7 @@ def linearRegress(request):
             return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
         else:
             return HttpResponse("提交失败请完整填写参数")
+@login_required
 def DecisionTr(request):
     if request.method=='GET':
         return render(request,'Decision_Tree.html')
@@ -152,6 +164,7 @@ def DecisionTr(request):
             return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
         else:
             return HttpResponse("提交失败请完整填写参数")
+@login_required
 def Detrcfn(request):
     if request.method=='GET':
         return render(request,'classfy/DecisionTreeClassification.html')
@@ -177,7 +190,8 @@ def Detrcfn(request):
             model_url = default_storage.url(f'decision_tree_model_{65536}.joblib')
             return render(request, 'result2.html', {'model_url': model_url, 'image_path': image_path,'image_path2':image_path2})
         else:
-            return HttpResponse("提交失败请完整填写参数")    
+            return HttpResponse("提交失败请完整填写参数")
+@login_required    
 def LoReg(request):
     if request.method=='GET':
         return render(request,'classfy/loginRegress.html')
@@ -204,6 +218,7 @@ def LoReg(request):
             return render(request, 'result2.html', {'model_url': model_url, 'image_path': image_path,'image_path2':image_path2})
         else:
             return HttpResponse("提交失败请完整填写参数")
+@login_required
 def RF(request):
     if request.method=='GET':
         return render(request,'classfy/RF.html')
@@ -230,6 +245,7 @@ def RF(request):
             return render(request, 'result2.html', {'model_url': model_url, 'image_path': image_path,'image_path2':image_path2})
         else:
             return HttpResponse("提交失败请完整填写参数")
+@login_required
 def SVM(request):
     if request.method=='GET':
         return render(request,'classfy/SVM.html')
@@ -256,6 +272,7 @@ def SVM(request):
             return render(request, 'result2.html', {'model_url': model_url, 'image_path': image_path,'image_path2':image_path2})
         else:
             return HttpResponse("提交失败请完整填写参数")
+@login_required
 def MLP(request):
     if request.method=='GET':
         return render(request,'classfy/MLP.html')
@@ -285,6 +302,7 @@ def MLP(request):
             return render(request, 'result2.html', {'model_url': model_url, 'image_path': image_path,'image_path2':image_path2})
         else:
             return HttpResponse("提交失败请完整填写参数")
+@login_required
 def Kmeans(request):
     if request.method=='GET':
         return render(request,'cluster/Kmeans.html')
@@ -307,6 +325,7 @@ def Kmeans(request):
             return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
         else:
             return HttpResponse("提交失败请完整填写参数")
+@login_required
 def Hierarchical(request):
     if request.method=='GET':
         return render(request,'cluster/Hierarchical.html')
@@ -326,6 +345,7 @@ def Hierarchical(request):
             image_path = default_storage.url(f'{65536}_dendrogram.png')
             model_url = default_storage.url(f'{65536}_model.joblib')
             return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
+@login_required
 def DBSCAN(request):
     if request.method=='GET':
         return render(request,'cluster/DBSCAN.html')
