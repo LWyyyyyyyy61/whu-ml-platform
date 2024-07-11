@@ -23,10 +23,6 @@
             <div class="panel-body">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class=" form-group">
-                        <label for="regretar">目标值</label>
-                        <input type="text" class="form-control" id="" placeholder="目标值" name="regretar">
-                    </div>
                     <div class="form-group">
                         <label for="regresfile">文件上传</label>
                         <input type="file" id="regresfile" name="regresfile">
@@ -44,17 +40,13 @@
             <div class="panel-body">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class=" form-group">
-                        <label for="regretar1">目标值</label>
-                        <input type="text" class="form-control" id="" placeholder="目标值" name="regretar1">
-                    </div>
                     <div class="form-group">
                         <label for="regresfile1">文件上传</label>
                         <input type="file" id="regresfile1" name="regresfile1">
                     </div>
                     <div class="form-group">
-                        <label for="exerfqt">训练率</label>
-                        <input type="text" class="form-control" id="" placeholder="0.8" name="exerfqt" value="0.8">
+                        <label for="exerfqt">聚类点数</label>
+                        <input type="number" class="form-control" id="" placeholder="3" name="exerfqt" value="3">
                     </div>
                     <div class="form-group">
                         <label for="cont">随机种子</label>

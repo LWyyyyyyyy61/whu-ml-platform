@@ -19,28 +19,24 @@
         <div class="panel panel-default col-md-4 col-md-offset-1" style="border-color:white">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h3 class="panel-title">K Means</h3>
+                    <h3 class="panel-title">k均值算法</h3>
                 </div>
                 <div class="panel-body">
-                    <a href="#">K-Means is a simple and efficient unsupervised clustering algorithm. It iteratively
-                        partitions the data into K clusters, minimizing the average distance between each sample and the
-                        centroid of the cluster it belongs to. K-Means is easy to implement and has fast convergence for
-                        large-scale data, but it requires the number of clusters K to be pre-defined and is sensitive to
-                        outliers and noise.
+                    <a href="{% url 'Kmeans' %}">
+                        k均值算法是一种简单高效的无监督聚类算法。它通过迭代地将数据划分为K个聚类,使每个样本到其所属聚类质心的平均距离最小。
+                        K-means易于实现,在处理大规模数据时收敛速度快,但需要预先指定聚类数K,并且对异常值和噪声敏感。
                     </a>
                 </div>
             </div>
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Hierarchical Clustering</h3>
+                    <h3 class="panel-title">层次聚类</h3>
                 </div>
                 <div class="panel-body">
-                    <a href="#">Hierarchical clustering is a bottom-up clustering method that recursively merges similar
-                        data samples into clusters, constructing a hierarchical tree-like structure. It does not require
-                        the number of clusters to be specified in advance, allowing the observation of the data's
-                        hierarchical structure. Hierarchical clustering can handle non-convex shaped clusters, but has
-                        lower computational efficiency for large-scale data and the results may be affected by the
-                        initial conditions.
+                    <a href="{% url 'Hierarchical' %}">
+                        层次聚类是一种自底向上的聚类方法,它通过递归地合并相似的数据样本来构建层次树状结构。
+                        它不需要预先指定聚类数,可以观察数据的层次结构。
+                        层次聚类可以处理非凸形状的聚类,但对于大规模数据它的计算效率较低,且初始条件可能会影响结果。
                     </a>
                 </div>
             </div>
@@ -50,15 +46,13 @@
         <div class="panel panel-default col-md-4" style="border-color:white">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h3 class="panel-title">DBSCAN</h3>
+                    <h3 class="panel-title">基于密度的噪声应用程序空间聚类(DBSCAN)</h3>
                 </div>
                 <div class="panel-body">
-                    <a href="#">DBSCAN is a density-based clustering algorithm that identifies clusters by recognizing
-                        dense regions in the data. It does not require the number of clusters to be specified and can
-                        automatically detect noise samples. DBSCAN is robust to noise and outliers, and can discover
-                        clusters of arbitrary shapes, but may perform poorly when the data has significant differences
-                        in density and cluster sizes, and its computational complexity increases with the number of
-                        samples.
+                    <a href="{% url 'DBSCAN' %}">
+                        DBSCAN是一种基于密度的聚类算法,通过识别数据中的密集区域来确定聚类。
+                        它不需要预先指定聚类数,可以自动检测噪声样本。
+                        DBSCAN对噪声和异常值具有鲁棒性,可以发现任意形状的聚类,但当数据密度和聚类大小差异较大时,其性能可能会较差,并且计算复杂度随样本数量增加而增加。
                     </a>
 
                 </div>

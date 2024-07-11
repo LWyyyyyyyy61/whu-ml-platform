@@ -10,9 +10,9 @@ def read_data(file_path, column_names=None):
     # 获取文件的本地路径
     local_file_path = default_storage.path(file_path)
     if local_file_path.endswith('.csv'):
-        return pd.read_csv(file_path)
+        return pd.read_csv(local_file_path)
     elif local_file_path.endswith('.data'):
-        return pd.read_csv(file_path, sep='\s+', header=None, names=column_names)
+        return pd.read_csv(local_file_path, sep='\s+', header=None, names=column_names)
     else:
         raise ValueError("Unsupported file format")
 
@@ -52,12 +52,12 @@ def preprocess_data_unsupervised(file_path):
     X = df.values  # 返回预处理后的特征矩阵
 
     return X
-def plot_clusters(X, labels, centroids, title='K-Means Clustering'):
+def plot_clusters(X, labels, centroids, random_state,title='K-Means Clustering'):
     plt.figure(figsize=(10, 6))
     plt.scatter(X[:, 0], X[:, 1], c=labels, s=50, cmap='viridis')
     plt.scatter(centroids[:, 0], centroids[:, 1], c='red', s=200, alpha=0.75, marker='X')
     plt.title(title)
-    plt.savefig(f"media/{title}.png")
+    plt.savefig(f"media/{random_state}.png")
     plt.close()
 
 def train_and_evaluate_model(X, num_clusters, model_name,random_state=65536):
@@ -67,13 +67,13 @@ def train_and_evaluate_model(X, num_clusters, model_name,random_state=65536):
     silhouette_avg = silhouette_score(X, labels)
     centroids = model.cluster_centers_
 
-    plot_clusters(X, labels, centroids, title=f'{model_name} Clustering')
+    plot_clusters(X, labels, centroids, random_state,title=f'{model_name} Clustering')
     print(f"{model_name} Silhouette Score: {silhouette_avg:.2f}")
 
-def training(file_path ,num_clusters, random_state):
+def training6(file_path ,num_clusters, random_state):
     num_clusters= int(num_clusters)
     random_state= int(random_state)
-    model_path = f'media/Kmeans_model.joblib'
+    model_path = f'media/Kmeans_model_{random_state}.joblib'
 
 
     X = preprocess_data_unsupervised(file_path)
