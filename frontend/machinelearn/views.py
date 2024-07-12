@@ -112,6 +112,7 @@ def userinf(request):
     # Get the currently logged-in user
     user = request.user
 
+<<<<<<< HEAD
     # Retrieve the user's information
     username = user.username
     email = user.email
@@ -119,6 +120,15 @@ def userinf(request):
     context = {
         'username': username,
         'email': email,
+=======
+ # Retrieve the user's information
+    username = user.username
+    email = user.email
+ # Pass the user's information to the template
+    context = {
+    'username': username,
+    'email': email,
+>>>>>>> dcda7a8f2f30d92a83b4c038a519c2a7714e41c4
     }
     return render(request, 'user.html', context)
 @login_required
