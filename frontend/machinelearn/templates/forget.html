@@ -1,0 +1,56 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>welcome to machine learn</title>
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
+</head>
+
+<body>
+    <form method="post" action="/register/" onsubmit="return validateForm()">
+        {% csrf_token %}
+        <div class="alert alert-danger">{{ error }}</div>
+        <div class="box">
+            <h2>change password</h2>
+            <div class="input-box">
+                <label>账号</label>
+                <input type="text" name="user" required>
+            </div>
+            <div class="input-box">
+                <label>邮箱</label>
+                <input type="email" name="e-mail" required>
+            </div>
+            <div class="input-box">
+                <label>新密码</label>
+                <input type="password" name="pwd" required>
+            </div>
+            <div class="btn-box">
+
+                <div>
+                    <button type="button" id="login-btn" value="登录" class="btn btn-primary">返回登录</button>
+                    <button type="submit" class="btn btn-primary">重置密码</button>
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+    <script src="{% static 'js/jquery-3.7.1.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
+    <script>
+        document.getElementById('login-btn').addEventListener('click', () => {
+            window.location.href = "{% url 'login' %}";
+        });
+    </script>
+
+</body>
+
+</html>

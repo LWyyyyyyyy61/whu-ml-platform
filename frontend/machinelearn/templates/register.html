@@ -14,11 +14,10 @@
 </head>
 
 <body>
-    <div class="error-message" style="color: red;">
-        {{error}}
-    </div>
-    <form method="post" action="/register/">
+
+    <form method="post" action="/register/" onsubmit="return validateForm()">
         {% csrf_token %}
+        <div class="alert alert-danger">{{ error }}</div>
         <div class="box">
             <h2>Register</h2>
             <div class="input-box">
@@ -30,13 +29,13 @@
                 <input type="password" name="pwd" required>
             </div>
             <div class="input-box">
-                <label>邮箱</label>
-                <input type="email" name="e-mail">
+                <label>再次输入密码</label>
+                <input type="password" name="pwd_confirm" required>
             </div>
-            <!-- <div class="input-box">
-                <label>电话</label>
-                <input type="text" name="phone-number">
-            </div> -->
+            <div class="input-box">
+                <label>邮箱</label>
+                <input type="email" name="e-mail" required>
+            </div>
             <div class="btn-box">
 
                 <div>
@@ -48,11 +47,15 @@
             </div>
         </div>
     </form>
+    <script src="{% static 'js/jquery-3.7.1.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
     <script>
         document.getElementById('login-btn').addEventListener('click', () => {
             window.location.href = "{% url 'login' %}";
         });
     </script>
+
 </body>
 
 </html>
