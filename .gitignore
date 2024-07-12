@@ -120,5 +120,9 @@ dmypy.json
 cython_debug/
 
 frontend/mysql/
+<<<<<<< HEAD
 
 frontend/media/
+=======
+**/*Zone.Identifier
+>>>>>>> 780d7cc911c5fa0070ac7161fe04418b144e1b10
