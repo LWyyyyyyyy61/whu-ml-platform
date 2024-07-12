@@ -92,7 +92,18 @@ def upload_file(request):
         return render(request, 'upload.html', {'form': form})
 @login_required   
 def userinf(request):
-    return render(request,'user.html')
+    # Get the currently logged-in user
+    user = request.user
+
+ # Retrieve the user's information
+    username = user.username
+    email = user.email
+ # Pass the user's information to the template
+    context = {
+    'username': username,
+    'email': email,
+    }
+    return render(request, 'user.html', context)
 @login_required
 def information(request):
     return render(request,'information.html')
