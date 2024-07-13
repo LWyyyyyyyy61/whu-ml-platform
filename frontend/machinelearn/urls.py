@@ -18,4 +18,6 @@ urlpatterns = [
     path('kmeans/',views.Kmeans,name='Kmeans'),
     path('Hierarchical/',views.Hierarchical,name='Hierarchical'),
     path('DBSCAN/',views.DBSCAN,name='DBSCAN'),
+    path('returnback/',views.returnback,name='returnback'),
+    path('history/',views.history,name='history'),
 ]

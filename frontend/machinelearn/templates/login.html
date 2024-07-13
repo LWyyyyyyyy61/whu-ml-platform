@@ -11,12 +11,22 @@
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
+    <style>
+        h1 {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 60px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="error-message">{{ error }}</div>
     <form method="post" action="/login/">
         {% csrf_token %}
-        <div class="alert alert-danger">{{ error }}</div>
+        <div style="text-align: center;">
+            <h1>ml-platform</h1>
+        </div>
         <div class="box">
             <h2>Login</h2>
             <div class="input-box">
