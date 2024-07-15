@@ -1,32 +1,37 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
 <body>
     {% block content %}
-    <div class="panel panel-info col-md-12">
-        <div class="panel-heading">
-            <h3 class="panel-title">欢迎使用机器学习平台！</h3>
+    <div class="panel panel-info col-md-12"
+        style="text-shadow: 2px 2px 4px rgba(121, 197, 216, 0.5);box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);;border-radius: 10%;">
+        <div class="panel-heading" style="border-color:white;background-color: transparent;border-radius: 15%;">
+            <h2 style="border-color:white;background-color: transparent;">欢迎使用机器学习平台！</h2>
         </div>
         <div class="panel-body">
-            该平台尚处于开发阶段，目前有以下三种模型供各位用户使用
+            <h3>该平台尚处于开发阶段，目前有以下三种模型供各位用户使用</h3>
         </div>
     </div>
     <div class="container-fluid " style="margin-top: 1%;">
-        <div class="panel panel-default col-md-4 col-md-offset-1" style="border-color:white">
-            <div class="panel panel-info">
+        <div class="panel panel-default col-md-4 col-md-offset-1"
+            style="border-color:transparent;background-color: transparent;">
+            <div class="panel panel-info"
+                style="border-color:transparent;background-color: transparent;box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);">
                 <div class="panel-heading">
                     <h3 class="panel-title">回归模型</h3>
                 </div>
                 <div class="panel-body">
-                    <a href="{% url 'Regress' %}"><img src="{% static 'img/regression1.jpeg' %}" alt="regress"
+                    <a href="{% url 'Regress' %}"><img src="{% static 'img/regression.png' %}" alt="regress"
                             style="width: 100%; height: 150%;">
                     </a>
                 </div>
             </div>
         </div>
         <div class="col-md-1"></div>
-        <div class="panel panel-default col-md-4" style="border-color:white">
-            <div class="panel panel-info">
+        <div class="panel panel-default col-md-4" style="border-color:transparent;background-color: transparent;">
+            <div class="panel panel-info"
+                style="border-color:white;background-color: transparent;box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);">
                 <div class="panel-heading">
                     <h3 class="panel-title">聚类模型</h3>
                 </div>
@@ -39,26 +44,29 @@
         </div>
     </div>
     <div class="container-fluid " style="margin-top: 1%;">
-        <div class="panel panel-default col-md-4 col-md-offset-1" style="border-color:white">
-            <div class="panel panel-info">
+        <div class="panel panel-default col-md-4 col-md-offset-1"
+            style="border-color:transparent;background-color: transparent;">
+            <div class="panel panel-info"
+                style="border-color:white;background-color: transparent;box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);">
                 <div class="panel-heading">
                     <h3 class="panel-title">分类模型</h3>
                 </div>
                 <div class="panel-body">
-                    <a href="{% url 'Classification' %}"><img src="{% static 'img/classfy1.png' %}" alt="classify"
+                    <a href="{% url 'Classification' %}"><img src="{% static 'img/classfy.png' %}" alt="classify"
                             style="width: 100%;">
                     </a>
                 </div>
             </div>
         </div>
         <div class="col-md-1"></div>
-        <div class="panel panel-default col-md-4" style="border-color:white">
-            <div class="panel panel-info">
+        <div class="panel panel-default col-md-4" style="border-color:transparent;background-color: transparent;">
+            <div class="panel panel-info"
+                style="border-color:white;background-color: transparent;box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);">
                 <div class="panel-heading">
-                    <h3 class="panel-title">更多模型</h3>
+                    <h3 class="panel-title">更多模型,敬请期待</h3>
                 </div>
                 <div class="panel-body">
-                    <a href="{% url 'information' %}">敬请期待
+                    <a href="{% url 'information' %}"><img src="{% static 'img/learn1.jpeg' %}" alt="敬请期待">
                     </a>
                 </div>
             </div>

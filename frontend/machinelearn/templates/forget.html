@@ -11,14 +11,30 @@
     <link rel="stylesheet" href="{% static 'css/register.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
+    <style>
+        h2 {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 50px;
+            font-weight: bold;
+        }
+
+        body {
+            height: 100vh;
+            background: url(../static/img/whu2.jpg);
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="error-message">{{ error }}</div>
     <form method="post" action="/register/" onsubmit="return validateForm()">
         {% csrf_token %}
-        <div class="alert alert-danger">{{ error }}</div>
         <div class="box">
-            <h2>change password</h2>
+            <h2>修 改 密 码</h2>
             <div class="input-box">
                 <label>账号</label>
                 <input type="text" name="user" required>

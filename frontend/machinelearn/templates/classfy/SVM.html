@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
 
 <body>
     {% block content %}
     <div class="container-fluid " style="margin-top: 1%;">
 
         <div class="panel panel-default col-md-4 col-md-offset-1 ">
-            <div class="panel-heading">默认训练模型</div>
+            <div class="panel-heading" style="border-color:white;background-color: transparent;">支持向量机分类默认训练模型</div>
             <div class="panel-body">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -25,7 +28,7 @@
         </div>
         <div class="col-md-2"></div>
         <div class="panel panel-default col-md-4 ">
-            <div class="panel-heading">
+            <div class="panel-heading" style="border-color:white;background-color: transparent;">
                 自定义训练模型
             </div>
             <div class="panel-body">

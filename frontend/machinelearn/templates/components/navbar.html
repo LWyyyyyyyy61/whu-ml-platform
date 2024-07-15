@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default" style="border-color:white;background-color: transparent;">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -16,11 +16,12 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <!-- <li class="active"><a href="#">model <span class="sr-only">(current)</span></a></li> -->
-                <li><a href="{% url 'Modelintro' %}">模型介绍</a></li>
+                <li><a href="{% url 'Modelintro' %}"><i class="fa-solid fa-gears"></i>模型介绍</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                        aria-expanded="false">机器学习模型<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
+                        aria-expanded="false"><i class="fa-solid fa-list"></i>机器学习模型<span class="caret"></span></a>
+                    <ul class="dropdown-menu"
+                        style="border-color:white;background-color: rgb(165, 219, 242); box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);">
                         <li><a href="{% url 'Regress' %}">回归模型</a></li>
                         <li><a href="{% url 'Classification' %}">分类模型</a></li>
                         <li><a href="{% url 'Clustering' %}">聚类模型</a></li>
@@ -36,17 +37,17 @@
                 <button type="submit" class="btn btn-default"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{% url 'information' %}">更多信息</a></li>
+                <li><a href="{% url 'information' %}"><i class="fa-solid fa-tags"></i>更多信息</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                        aria-expanded="false"> <i class="fa-solid fa-house"></i>用户
+                        aria-expanded="false"><i class="fa-solid fa-user-minus"></i>用户
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'user' %}">个人信息</a></li>
-                        <li><a href="{% url 'history' %}">使用记录</a></li>
-                        <li><a href="{% url 'returnback' %}">反馈</a></li>
+                        <li><a href="{% url 'user' %}"><i class="fa-solid fa-user-secret"></i> 个人信息</a></li>
+                        <li><a href="{% url 'history' %}"><i class="fa-solid fa-code"></i> 工作记录</a></li>
+                        <li><a href="{% url 'returnback' %}"><i class="fa-solid fa-comment"></i> 讨论与反馈</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="{% url 'logout' %}">注销</a></li>
+                        <li><a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> 注销</a></li>
                     </ul>
                 </li>
             </ul>
