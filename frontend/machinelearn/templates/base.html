@@ -11,10 +11,15 @@
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css' %}">
+
     {% block css %}
     <!-- <link rel="stylesheet" href="{% static 'path/to/your.css' %}"> -->
     {% endblock %}
     <style>
+        .dropdown-menu li a:hover {
+            color: #4e8dd0;
+        }
+
         .hide {
             display: none;
         }
@@ -23,6 +28,11 @@
             height: 100%;
             width: 80%;
             border: #333;
+        }
+
+        body {
+            background: url(../static/img/background.png);
+            background-size: cover;
         }
 
         .menu .heder {

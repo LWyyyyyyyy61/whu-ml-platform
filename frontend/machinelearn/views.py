@@ -1,13 +1,13 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.models import User
-from .models import rback
-from django.contrib.auth import login, authenticate,logout 
+from .models import rback,histy
+from django.contrib.auth import authenticate,logout 
 from django.contrib import auth
 import os
 from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
-from .forms import UploadFileForm,returnbac
+from .forms import UploadFileForm,returnbac,his
 from .Linear_Regression import training
 from .Decision_Tree_R import train
 from .Decision_Tree import training1
@@ -20,8 +20,7 @@ from .Hierarchical_Clustering import training7
 from .DBSCAN import training8
 from django.core.files.storage import default_storage
 from django.contrib.auth.decorators import login_required
-import frontend.settings as settings
-import numpy as np
+from datetime import datetime
 
 # Create your views here.
 def forelogin(request):
@@ -39,7 +38,7 @@ def login(request):
             if user:
                 # 读者验证成功，执行逻辑或重定向到其他页面
                 auth.login(request,user)
-                return redirect('home/')
+                return redirect('home')
             else:
                return render(request, 'login.html', {'error': '用户名或密码错误'})
         else:
@@ -167,7 +166,21 @@ def returnback(request):
             return render(request, 'returnback.html', {"queryset": queryset, "form": form})
 @login_required
 def history(request):
-    return render(request,'history.html')
+    if request.method=="GET":
+        form=his()
+        queryset=histy.objects.filter(username=request.user.username)
+        return render(request,'history.html',{"form":form,"queryset":queryset})
+    else:
+        form=his(request.POST)
+        if form.is_valid():
+            histoy=form.save(commit=False)
+            histoy.username=request.user.username
+            histoy.usetime=datetime.now()
+            histoy.save()
+            return redirect('history')
+        else:
+            queryset=histy.objects.filter(username=request.user.username)
+            return render(request,'history.html',{"form":form,"queryset":queryset})
 @login_required
 def linearRegress(request):
     if request.method=='GET':

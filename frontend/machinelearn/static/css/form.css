@@ -1,0 +1,26 @@
+.container-fluid {
+    margin-top: 1%;
+}
+
+.panel {
+    border-color: white;
+    background-color: transparent;
+    box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);
+}
+
+.panel-heading {
+    border-color: white;
+    background-color: transparent;
+}
+
+.form-control {
+    border-color: white;
+    background-color: transparent;
+    box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);
+}
+
+.btn {
+    border-color: white;
+    background-color: transparent;
+    box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);
+}

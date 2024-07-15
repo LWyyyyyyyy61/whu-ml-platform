@@ -7,7 +7,7 @@
 
 body {
     height: 100vh;
-    /* background: url(../img/1.png); */
+    background: url(../static/img/whu2.jpg);
     background-size: cover;
     display: flex;
     justify-content: center;

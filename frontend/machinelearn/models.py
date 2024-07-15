@@ -8,7 +8,13 @@ class rback(models.Model):
         (1,"是"),
         (2,"否"),
     )
-    username=models.CharField(verbose_name="用户名",max_length=11,blank=True,null=True)
+    username=models.CharField(verbose_name="用户名",max_length=64,blank=True,null=True)
     email=models.EmailField(verbose_name="邮箱",blank=True,null=True)
     niming=models.SmallIntegerField(verbose_name="是否匿名",choices=niming_choices)
     content=models.TextField(verbose_name="讨论或反馈内容")
+
+class histy(models.Model):
+    """历史记录"""
+    username=models.CharField(verbose_name="用户名",max_length=64)
+    usetime=models.DateTimeField(verbose_name="使用时间")
+    usecontent=models.TextField(verbose_name="")
