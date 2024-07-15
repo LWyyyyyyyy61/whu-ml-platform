@@ -11,32 +11,48 @@
     <link rel="stylesheet" href="{% static 'css/register.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
+    <style>
+        h1 {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+        .error-message {
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="error-message" style="color: red;">
-        {{error}}
-    </div>
-    <form method="post" action="/register/">
+    <div class="error-message">{{ error }}</div>
+    <form method="post" action="/register/" onsubmit="return validateForm()">
         {% csrf_token %}
+
+        <div style="text-align: center;">
+            <h1>ml-platform</h1>
+        </div>
         <div class="box">
             <h2>Register</h2>
             <div class="input-box">
                 <label>账号</label>
                 <input type="text" name="user" required>
             </div>
+
             <div class="input-box">
                 <label>密码</label>
                 <input type="password" name="pwd" required>
             </div>
             <div class="input-box">
-                <label>邮箱</label>
-                <input type="email" name="e-mail">
+                <label>再次输入密码</label>
+                <input type="password" name="pwd_confirm" required>
             </div>
-            <!-- <div class="input-box">
-                <label>电话</label>
-                <input type="text" name="phone-number">
-            </div> -->
+            <div class="input-box">
+                <label>邮箱</label>
+                <input type="email" name="e-mail" required>
+            </div>
             <div class="btn-box">
 
                 <div>
@@ -48,11 +64,16 @@
             </div>
         </div>
     </form>
+    <script src="{% static 'js/jquery-3.7.1.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
     <script>
         document.getElementById('login-btn').addEventListener('click', () => {
             window.location.href = "{% url 'login' %}";
         });
+
     </script>
+
 </body>
 
 </html>

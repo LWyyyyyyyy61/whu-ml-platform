@@ -1,11 +1,13 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.models import User
+from .models import rback
 from django.contrib.auth import login, authenticate,logout 
 from django.contrib import auth
 import os
 from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
-from .forms import UploadFileForm
+from .forms import UploadFileForm,returnbac
 from .Linear_Regression import training
 from .Decision_Tree_R import train
 from .Decision_Tree import training1
@@ -22,7 +24,8 @@ import frontend.settings as settings
 import numpy as np
 
 # Create your views here.
-
+def forelogin(request):
+    return redirect('/login/')
 def login(request):
     if request.method == 'GET':
         return render(request, "login.html")
@@ -38,23 +41,40 @@ def login(request):
                 auth.login(request,user)
                 return redirect('home/')
             else:
-               return render(request, 'login.html', {'error': 'Invalid login credentials.'})
+               return render(request, 'login.html', {'error': '用户名或密码错误'})
         else:
             return HttpResponse('请提供用户名和密码')    
 def register(request):
     if request.method == 'POST':
         username = request.POST.get('user')
         password = request.POST.get('pwd')
+        password_confir=request.POST.get('pwd_confirm')
         email=request.POST.get('e-mail')
         # phonenumber=request.POST.get('phone-number')
+        if password!=password_confir:
+            error="密码输入不一致，请重新输入"
+            return render(request, 'register.html', {'error': error})
         if User.objects.filter(username=username).exists():
             # 用户名已存在,提示用户尝试其他用户名
-            return render(request, 'register.html', {'error': 'Username already exists. Please try a different one.'})
+            error="用户名已存在请修改"
+            return render(request, 'register.html', {'error': error})
+        
         user = User.objects.create_user(username=username,password=password,email=email)
         user.save()
         return redirect('/login/')
     return render(request, "register.html")
-
+def forget_mima(request):
+    if request.method=='GET':
+        return render(request,"forget.html")
+    username = request.POST.get('user')
+    email=request.POST.get('e-mail')
+    new_password=request.POST.get('pwd')
+    if User.objects.filter(username=username,email=email).exists():
+        user = User.objects.get(username=username, email=email)
+        user.set_password(new_password)
+        user.save()
+    else:
+        return render(request, "forget.html", {'error': '未找到该用户或邮箱错误'})
 @login_required
 def home(request):
         return render(request,"home.html")
@@ -95,13 +115,13 @@ def userinf(request):
     # Get the currently logged-in user
     user = request.user
 
- # Retrieve the user's information
+    # Retrieve the user's information
     username = user.username
     email = user.email
- # Pass the user's information to the template
+    # Pass the user's information to the template
     context = {
-    'username': username,
-    'email': email,
+        'username': username,
+        'email': email,
     }
     return render(request, 'user.html', context)
 @login_required
@@ -124,6 +144,30 @@ def logout_view(request):
     logout(request)
     # 登出后重定向到的页面，可自定义
     return redirect('/login/')
+@login_required
+def returnback(request):
+    if request.method=="GET":
+        form=returnbac()
+        queryset=rback.objects.all()
+        return render(request,'returnback.html', {"queryset": queryset, "form": form})
+    else:
+        form=returnbac(request.POST)
+        if form.is_valid():
+            feedback = form.save(commit=False)
+            if feedback.niming == 1:
+                feedback.username = '匿名用户'
+                feedback.email='xxxxx@xx.com'
+            else:
+                feedback.username=request.user.username
+                feedback.email=request.user.email
+            feedback.save()
+            return redirect('returnback')
+        else:
+            queryset = rback.objects.all()
+            return render(request, 'returnback.html', {"queryset": queryset, "form": form})
+@login_required
+def history(request):
+    return render(request,'history.html')
 @login_required
 def linearRegress(request):
     if request.method=='GET':
@@ -379,4 +423,3 @@ def DBSCAN(request):
             return render(request, 'result.html', {'model_url': model_url, 'image_path': image_path})
         else:
             return HttpResponse("提交失败请完整填写参数")
-       

@@ -11,26 +11,35 @@
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
+    <style>
+        h1 {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 60px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="error-message">{{ error }}</div>
     <form method="post" action="/login/">
         {% csrf_token %}
-        {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
-        {% endif %}
+        <div style="text-align: center;">
+            <h1>ml-platform</h1>
+        </div>
         <div class="box">
             <h2>Login</h2>
             <div class="input-box">
                 <label>账号</label>
                 <input type="text" name="user" required>
             </div>
+
             <div class="input-box">
                 <label>密码</label>
                 <input type="password" name="pwd" required>
             </div>
             <div class="btn-box">
-                <a href="javascript:void(0)">忘记密码?</a>
+                <a href="{% url 'forget' %}">忘记密码?</a>
                 <div>
                     <button type="submit" value="登录" class="btn btn-primary">登录</button>
                     <button type="button" id="register-btn" class="btn btn-primary">去注册</button>

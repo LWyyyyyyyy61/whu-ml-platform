@@ -1,18 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>welcome to machine learn</title>
-    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.css' %}">
-    <link rel="stylesheet" href="{% static 'plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css' %}">
-
-</head>
 
 <body>
     {% block content %}
@@ -28,9 +15,11 @@
     </div>
     <div class="panel panel-default">
         <!-- Default panel contents -->
-        <div class="panel-heading">团队成员</div>
+        <div class="panel-heading">int65536</div>
         <div class="panel-body">
             <p>欢迎加入我们！</p>
+            <p>邮箱：61yalimh@outlook.com</p>
+            <p>团队成员</p>
         </div>
 
         <!-- Table -->
@@ -40,7 +29,7 @@
                     <th>#</th>
                     <th>姓名</th>
                     <th>联系方式</th>
-                    <th>用户名</th>
+                    <th>职位</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,29 +37,35 @@
                     <th scope="row">1</th>
                     <td>匿名</td>
                     <td></td>
-                    <td></td>
+                    <td>技术经理</td>
                 </tr>
                 <tr>
                     <th scope="row">2</th>
                     <td>匿名</td>
                     <td></td>
-                    <td></td>
+                    <td>项目经理</td>
                 </tr>
                 <tr>
                     <th scope="row">3</th>
                     <td>匿名</td>
                     <td></td>
-                    <td></td>
+                    <td>产品经理</td>
                 </tr>
                 <tr>
                     <th scope="row">4</th>
                     <td>匿名</td>
                     <td></td>
-                    <td></td>
+                    <td>开发人员</td>
                 </tr>
                 <tr>
                     <th scope="row">5</th>
                     <td>匿名</td>
+                    <td></td>
+                    <td>开发人员</td>
+                </tr>
+                <tr>
+                    <th scope="row">6</th>
+                    <td>期待你的加入</td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -78,12 +73,8 @@
         </table>
     </div>
     {% endblock %}
-    <script src="{% static 'js/jquery-3.7.1.js' %}"></script>
-    <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js' %}"></script>
+
     <script>
 
     </script>
 </body>
-
-</html>
