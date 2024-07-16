@@ -26,28 +26,34 @@
 
 <body>
 
-    <div class="container-fluid " style="margin-top: 5%;">
+    <div class="container-fluid " style="margin-top: 5%;border-color: white;background-color: transparent;">
 
-        <div class="panel panel-default col-md-4 col-md-offset-1 ">
-            <div class="panel-heading">
+        <div class="panel panel-default col-md-4 col-md-offset-1"
+            style="border-color:white;background-color: transparent;box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);">
+            <div class="panel-heading"
+                style="border-color:white;background-color: transparent;box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);">
                 上传结果
             </div>
-            <div class="panel-body">
+            <div class="panel-body" style="border-color:white;background-color: transparent;">
                 <p>模型文件：<a href="{{ model_url }}">点击下载模型</a></p>
 
             </div>
-            <div class="panel-body">
+            <div class="panel-body"
+                style="margin-top: 5%;border-color:white;background-color: transparent;box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);">
                 <!-- Added return home button -->
                 <a href="{% url 'home' %}" class="btn btn-primary">return</a>
             </div>
         </div>
         <div class="col-md-1"></div>
-        <div class="panel panel-default col-md-4 ">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+        <div class="panel panel-default col-md-4 "
+            style="border-color: white;background-color: transparent; box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);">
+            <div class="panel panel-default"
+                style="border-color: white;background-color: transparent;box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);">
+                <div class="panel-heading" style="border-color: white;background-color: transparent;">
                     <h3 class="panel-title">图片</h3>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body"
+                    style="border-color: white;background-color: transparent;box-shadow: 4px 4px 8px rgba(58, 185, 239, 0.5);">
                     <img src="{{image_path}}" alt="Regression Plot">
                 </div>
             </div>
