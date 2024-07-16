@@ -7,7 +7,6 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import TensorDataset, DataLoader
 from django.core.files.storage import default_storage
 
 def preprocess_data(file_path, target_column, train_ratio=0.8, random_state=65536):
@@ -165,5 +164,3 @@ def training5(file_path, target_column, train_ratio, random_state, hidden_size, 
     model_path = f'media/mlp_model_{random_state}.pth'
     save_model(model, model_path)
 
-# if __name__ == '__main__':
-#     training('F:/datasets/datasets/iris.csv', 'Species', 0.8, 65536, 10,1000,0.001)

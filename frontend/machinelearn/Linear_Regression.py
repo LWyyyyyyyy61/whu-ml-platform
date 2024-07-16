@@ -140,8 +140,3 @@ def training(file_path, target_column, train_ratio, learning_nums,learning_rate)
     with torch.no_grad():
         test_predictions = loaded_model(torch.tensor(X[split_idx:], dtype=torch.float32).view(-1, 1)).numpy()
         print(f'Test Predictions for model {learning_nums}:', test_predictions)
-
-
-
-# if __name__ == '__main__':
-#     training('F:/datasets/datasets/test.csv','education',0.8,10000,0.005)

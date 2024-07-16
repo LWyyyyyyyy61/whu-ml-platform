@@ -127,6 +127,3 @@ def training1(file_path,target_column,train_ratio,random_state):
     # 保存模型
     model_path = f'media/decision_tree_model_{random_state}.joblib'
     save_model(model, model_path)
-
-# if __name__ == '__main__':
-#     training('F:/datasets/datasets/iris.csv','Species',0.8,65536)

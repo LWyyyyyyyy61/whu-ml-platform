@@ -1,5 +1,6 @@
 from django.core.files.storage import FileSystemStorage
 import os
+
 class MyCustomStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
         # Check if the file with the same name already exists

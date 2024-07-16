@@ -19,9 +19,28 @@ def read_data(file_path, column_names=None):
         raise ValueError("Unsupported file format")
 
 def preprocess_data_unsupervised(file_path):
-    df = read_data(file_path)  # 转换为DataFrame
+    """
+    Preprocesses the unsupervised data by performing the following steps:
+    1. Reads the data from the given file path and converts it to a DataFrame.
+    2. Removes the 'rownames' column if present.
+    3. Encodes categorical columns using LabelEncoder.
+    4. Fills missing values with the mode for object columns and the mean for numeric columns.
+    5. Drops rows with any remaining missing values.
+    6. Standardizes numeric columns using StandardScaler.
+    7. Returns the preprocessed feature matrix.
 
-    # 删除指定列名（如果有的话）
+    Args:
+        file_path (str): The path to the data file.
+
+    Returns:
+        numpy.ndarray: The preprocessed feature matrix.
+
+    Raises:
+        ValueError: If the DataFrame is empty after handling NaN values.
+    """
+    df = read_data(file_path)  # Convert to DataFrame
+
+    # Remove specified column name (if any)
     if 'rownames' in df.columns:
         df.drop('rownames', axis=1, inplace=True)
 
@@ -32,26 +51,26 @@ def preprocess_data_unsupervised(file_path):
         df[column] = le.fit_transform(df[column])
         label_encoders[column] = le
 
-    # 填充缺失值
+    # Fill missing values
     for column in df.columns:
         if df[column].dtype == 'object':
             df[column].fillna(df[column].mode()[0], inplace=True)
         else:
             df[column].fillna(df[column].mean(), inplace=True)
 
-    # 检查是否还有缺失值
+    # Check if there are any remaining missing values
     if df.isnull().sum().sum() > 0:
         df = df.dropna()
 
     if df.empty:
         raise ValueError("Dataframe is empty after handling NaN values.")
 
-    # 标准化数值型特征
+    # Standardize numeric features
     scaler = StandardScaler()
     numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns
     df[numeric_columns] = scaler.fit_transform(df[numeric_columns])
 
-    X = df.values  # 返回预处理后的特征矩阵
+    X = df.values  # Return the preprocessed feature matrix
 
     return X
 
@@ -96,6 +115,3 @@ def training7(file_path, random_state=65536):
     model.fit(X)
     joblib.dump(model, model_path)
     print(f"Model saved to {model_path}")
-
-# if __name__ == "__main__":
-    # training('F:/datasets/datasets/iris.csv', random_state=65536)

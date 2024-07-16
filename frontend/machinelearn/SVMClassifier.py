@@ -115,5 +115,3 @@ def training4(file_path, target_column, train_ratio, random_state):
     model_path = f'media/svm_model_{random_state}.joblib'
     save_model(model, model_path)
 
-# if __name__ == '__main__':
-#     training('F:/datasets/datasets/iris.csv', 'Species', 0.8, 65536)

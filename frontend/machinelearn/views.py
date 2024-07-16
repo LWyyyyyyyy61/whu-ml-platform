@@ -1,12 +1,9 @@
-from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.models import User
 from .models import rback,histy
 from django.contrib.auth import authenticate,logout 
 from django.contrib import auth
-import os
 from django.shortcuts import render
-from django.core.files.storage import FileSystemStorage
 from .forms import UploadFileForm,returnbac,his
 from .Linear_Regression import training
 from .Decision_Tree_R import train
@@ -22,9 +19,9 @@ from django.core.files.storage import default_storage
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 
-# Create your views here.
 def forelogin(request):
     return redirect('/login/')
+
 def login(request):
     if request.method == 'GET':
         return render(request, "login.html")

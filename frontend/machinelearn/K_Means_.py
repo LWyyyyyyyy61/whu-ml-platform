@@ -52,6 +52,7 @@ def preprocess_data_unsupervised(file_path):
     X = df.values  # 返回预处理后的特征矩阵
 
     return X
+
 def plot_clusters(X, labels, centroids, random_state,title='K-Means Clustering'):
     plt.figure(figsize=(10, 6))
     plt.scatter(X[:, 0], X[:, 1], c=labels, s=50, cmap='viridis')
@@ -84,6 +85,3 @@ def training6(file_path ,num_clusters, random_state):
     model.fit(X)
     joblib.dump(model, model_path)
     print(f"Model saved to {model_path}")
-
-# if __name__ == "__main__":
-#     training('F:/datasets/datasets/iris.csv',3,65536)

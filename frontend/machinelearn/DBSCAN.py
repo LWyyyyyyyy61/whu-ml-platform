@@ -7,6 +7,7 @@ from sklearn.cluster import DBSCAN
 from sklearn.metrics import silhouette_score
 import joblib
 from django.core.files.storage import default_storage
+
 def read_data(file_path, column_names=None):
     # 获取文件的本地路径
     local_file_path = default_storage.path(file_path)
@@ -16,6 +17,7 @@ def read_data(file_path, column_names=None):
         return pd.read_csv(local_file_path, sep='\s+', header=None, names=column_names)
     else:
         raise ValueError("Unsupported file format")
+
 def preprocess_data_unsupervised(file_path):
     df =read_data(file_path)  # 转换为DataFrame
 
@@ -99,8 +101,3 @@ def training8(file_path,eps, min_samples):
     model.fit(X)
     joblib.dump(model, model_path)
     print(f"Model saved to {model_path}")
-
-
-# if __name__ == "__main__":
-#     training('F:/datasets/datasets/iris.csv',1.0,5)
-

@@ -88,6 +88,3 @@ def train(file_path, target_column, train_ratio, max_depth):
 
     test_predictions = loaded_model.predict(X[split_idx:].reshape(-1, 1))
     print(f'Test Predictions for model max_depth:', test_predictions)
-
-# Example usage
-# training('F:/datasets/datasets/bike-day.csv', 'cnt', 0.8, 10)
