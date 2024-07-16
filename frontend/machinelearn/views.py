@@ -39,7 +39,8 @@ def login(request):
             else:
                return render(request, 'login.html', {'error': '用户名或密码错误'})
         else:
-            return HttpResponse('请提供用户名和密码')    
+            return HttpResponse('请提供用户名和密码')
+            
 def register(request):
     if request.method == 'POST':
         username = request.POST.get('user')
@@ -59,6 +60,7 @@ def register(request):
         user.save()
         return redirect('/login/')
     return render(request, "register.html")
+
 def forget_mima(request):
     if request.method=='GET':
         return render(request,"forget.html")
